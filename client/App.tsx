@@ -19,7 +19,7 @@ const App = () => {
 
             <h1>Algo Clash!!!</h1>
 
-            <div>
+            <div id='pane'>
                 <Editor username={id} lanuage='js' value={code} onChange={setCode} />
             </div>
 
