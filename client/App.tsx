@@ -1,10 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const App = (props) => {
+import Editor from './Editor';
+
+import '../public/styles.scss';
+
+const App = () => {
+
+    const [id, setID] = useState<string>('');
+    const [code, setCode] = useState<string>('');
+
+    useEffect(() => {
+        //Grab socket information
+        setID('benji');
+    }, []);
+
     return (
-        <div>
-            testestestesteststestestests
-        </div>
+        <>
+
+            <h1>Algo Clash!!!</h1>
+
+            <div id='pane'>
+                <Editor username={id} lanuage='js' value={code} onChange={setCode} />
+            </div>
+
+            <iframe
+            title='output'
+            sandbox='allow-scripts'
+            frameBorder='0'
+            width='100%'
+            height='100%'
+            />
+        </>
     );
 }
 
