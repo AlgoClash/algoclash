@@ -1,8 +1,17 @@
 const path = require('path');
 const express = require('express');
-
 const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
 const PORT = process.env.PORT || 3000;
+
+io.on('connection', (socket) => {
+  console.log('a user connected!');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -30,4 +39,4 @@ app.use((err, _, res, next) => {
     return res.status(errorObj.status).json(errorObj.message);
 });
 
-app.listen(PORT, () => console.log(`listening on: ${PORT}`))
+http.listen(PORT, () => console.log(`listening on: ${PORT}!`))
