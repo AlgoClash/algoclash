@@ -1,0 +1,27 @@
+#editors{
+    display: flex;
+}
+
+.editorheader{
+    text-align: center;
+    font-family: monospace;
+    font-size: 16px;
+    width: 10rem;
+    color: #aaaaaa;
+    background-color: #777;
+    border-radius: 8px 8px 0px 0px;
+}
+
+.challenger{
+    filter: blur(5px);
+    user-select: none;
+    pointer-events: none;
+}
+
+.editorcontainer{
+    flex-grow: 1;
+    flex-basis: 0;
+    display: flex;
+    flex-direction: column;
+    padding: .5rem;
+}

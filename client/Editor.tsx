@@ -19,11 +19,11 @@ const Editor = (props) => {
 
     return (
         <div className='editorcontainer'>
-            <div className='header'>
+            <div className='editorheader'>
                 {props.username}
             </div>
 
-            <CodeMirror onChange={handleChange} options={options} value={props.value} />
+            <div className={`${props.user === 'challenger' ? 'challenger' : 'player'}`} ><CodeMirror onChange={handleChange} options={options} value={props.value} /></div>
 
         </div>
     );
