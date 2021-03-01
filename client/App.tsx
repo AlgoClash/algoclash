@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import Editor from './Editor';
+import Login from './Component/Login'
 
 import '../public/styles.scss';
 
@@ -16,11 +17,11 @@ const App = () => {
 
     return (
         <>
-
             <h1>Algo Clash!!!</h1>
 
             <div id='pane'>
                 <Editor username={id} lanuage='js' value={code} onChange={setCode} />
+                <Login/>
             </div>
 
             <iframe

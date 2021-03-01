@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CodeMirror from '@skidding/react-codemirror';
+import {UnControlled as CodeMirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/theme/lesser-dark.css';
