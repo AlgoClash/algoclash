@@ -12,8 +12,8 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 ;
-app.use('/', (req, res) => {
-    res.status(200).sendFile(path.join(__dirname, '../index.html'));
+app.use('/', (_, res) => {
+    res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
 });
 // global error handler --->
 app.use((err, _, res, next) => {

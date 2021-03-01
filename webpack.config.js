@@ -120,28 +120,4 @@ module.exports = {
       ignored: /node_modules/,
     },
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      title: 'algoclash',
-      cspPlugin: {
-        enabled: true,
-        policy: {
-          'base-uri': "'self'",
-          'object-src': "'none'",
-          'script-src': ["'self'"],
-          'style-src': ["'self'"],
-        },
-        hashEnabled: {
-          'script-src': true,
-          'style-src': true,
-        },
-        nonceEnabled: {
-          'script-src': true,
-          'style-src': true,
-        },
-      },
-    }),
-    isDevelopment && new ReactRefreshWebpackPlugin(),
-  ].filter(Boolean),
 };
