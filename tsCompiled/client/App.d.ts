@@ -1,2 +1,3 @@
-declare const App: (props: any) => any;
+import '../public/styles.scss';
+declare const App: () => any;
 export default App;
