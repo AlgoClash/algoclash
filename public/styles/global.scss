@@ -1,0 +1,24 @@
+@import 'editor';
+
+body{
+    margin: 0;
+}
+
+#questioncontainer{
+
+}
+
+#testcontainer{
+    
+}
+
+#consolecontainer{
+    user-select: none;
+    pointer-events: none;
+}
+
+// #terminal{
+//     display: flex;
+//     height: 50vh;
+//     background-color: blue;
+// }
