@@ -104,9 +104,6 @@ module.exports = {
   devServer: {
     // contentBase: path.resolve(__dirname, '/tsCompiled/frontend'),
     contentBase: path.resolve(__dirname, '/dist/'),
-    proxy: {
-      '/': 'http://localhost:3000',
-    },
     host: 'localhost',
     port: '8080',
     hot: true,
@@ -114,6 +111,11 @@ module.exports = {
     watchContentBase: true,
     watchOptions: {
       ignored: /node_modules/,
+    },
+    proxy: {
+      '/': 'http://localhost:3000',
+      secure: false,
+      changeOrigin: true
     },
   },
 };

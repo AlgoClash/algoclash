@@ -1,22 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import CodeMirror from '@skidding/react-codemirror';
 
-const options = {
-    lineNumbers: true,
-    lineWrapping: true,
-    readOnly: true,
-    mode: 'javascript',
-    theme: 'base16-dark',
-};
-
 const Tests = (props) => {
-    return (
-        <>
-            <div className='header'>Tests</div>
 
-            <CodeMirror options={options} value={props.value} />
-        </>
+    const options = {
+        lineNumbers: true,
+        lineWrapping: true,
+        readOnly: true,
+        mode: 'javascript',
+        theme: `${props.theme === 'light' ? 'default' : 'lesser-dark'}`,
+    };    
+
+    const [checks, toggleChecks] = useState<Boolean>(false);
+
+    const srcDoc = `
+    <html>
+        <script>${props.js}</script>
+    </html>`;
+
+    return (
+        <div id='test'>
+            <div className='header'><a onClick={() => toggleChecks(false)} style={{userSelect: 'none', cursor: 'pointer', opacity: `${checks ? '.6' : '1'}`}} >Tests</a> <a onClick={() => toggleChecks(true)} style={{userSelect: 'none', cursor: 'pointer', opacity: `${checks ? '1' : '.6'}`}} >/Checks</a></div>
+
+            {checks ? 
+                <div id='terminal'>
+                    <iframe
+                    id='iframe'
+                    srcDoc={srcDoc}
+                    title='output'
+                    sandbox='allow-scripts'
+                    frameBorder='0'
+                    width='100%'
+                    height='100%'
+                    />
+                </div> : <CodeMirror options={options} value={props.value} />}
+        </div>
     );
 }
 

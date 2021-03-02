@@ -1,25 +1,10 @@
-.ide{
-    max-width: 50em;
-}
-
-.editor{
-
+#test {
     .cm-s-lesser-dark.CodeMirror{
         background: $container !important;
     }
-    
+
     .cm-s-lesser-dark .CodeMirror-gutters{
         background: $container !important;
         border-right: 2px solid $gutter !important;
     }    
-
-}
-
-.challenger{
-    user-select: none;
-    pointer-events: none;
-
-    .cm-s-lesser-dark span{
-        filter: blur(4px) !important;
-    }
 }

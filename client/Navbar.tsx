@@ -73,7 +73,10 @@ const Navbar = (props) => {
     return (
         <div id='navbar'>
             <a href="/">Algo Clash</a>
-            <a onClick={createSignInModal} >Login/Sign Up</a>
+            <div>
+                <a onClick={createSignInModal} >Login/Sign Up</a>
+                <a>{`≡`}</a>
+            </div>
         </div>
     );
 }

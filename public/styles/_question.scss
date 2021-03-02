@@ -1,0 +1,8 @@
+#question {
+    .cm-s-lesser-dark.CodeMirror{
+        background: $container-secondary !important;
+    }
+    .cm-s-lesser-dark span.cm-comment{
+        color: $text !important;
+    }
+}
