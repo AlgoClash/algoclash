@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import {io} from "socket.io-client";
+import React, { useState, useEffect, useRef } from 'react';
 
 import Navbar from './Navbar';
 import Modal from './Modal';
@@ -9,12 +8,15 @@ import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
 
+import { io, Socket } from "socket.io-client";
+
 import { EXanswer, EXquestion, EXtests } from '../testdata.js';
 
 const App = () => {
-    const [socket, setSocket] = useState<any>(null);
 
     const [id, setID] = useState<string>('');
+    const socket = useRef<Socket>();
+    
     const [time, updateTime] = useState<Number>(600);
     const [totalRounds, setTotalRounds] = useState<Number>(3);
     const [round, nextRound] = useState<number>(1);
@@ -39,24 +41,21 @@ const App = () => {
     const [theme, setTheme] = useState<String>('dark');
 
     useEffect(() => {
-        setSocket(io());
-    }, []);
 
-
-    useEffect(() => {
-        //Grab socket information
-        setID('benji');
+        socket.current = io('http://localhost:8080');
+        socket.current.emit('joinRoom', {});
+        socket.current.on('joinSuccess', data => setID(data.socketID));
 
         setPlayerCode(EXanswer);
-
         setQuestion(EXquestion);
-
         setTests(EXtests);
-        
+
+        return () => { socket.current?.disconnect(); };
+
     }, []);
 
     useEffect(() => {
-        setChallengerCode(playerCode);
+        socket.current?.emit('keyDown', {data: playerCode});
     }, [playerCode]);
 
     const writeToDom = () => {
@@ -95,7 +94,7 @@ const App = () => {
 
             <Navbar createModal={createModal} />
             {modal ? <Modal title={modalTitle} contents={modalContent} /> : ''}
-            <div id='preventclick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${modal ? '50' : '-10'}`, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
+            <div id='preventclick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: modal ? 50 : -10, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
 
             <div id='appcontainer' style={{filter: `${modal ? 'blur(5px)' : ''}`}}>
 

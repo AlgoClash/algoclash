@@ -2,8 +2,6 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const app = express();
 const path = require('path');
-const httpServer = require('http').createServer(app);
-const io = require('socket.io')(httpServer);
 
 const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
@@ -32,18 +30,22 @@ app.use('/', (_, res) => {
   res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
 });
 
-io.on('connection', (client) => {
+const httpServer = require('http').Server(app);
+const io = require('socket.io')(httpServer);
+
+io.on('connection', (socket) => {
   console.log('a user connected!');
+  // console.log(socket.id);
   
-  client.on('keyDown', ({user, code}) => {
-    io.emit('message', {user, code})
+  socket.on('keyDown', (data) => {
+    console.log(data)
   });
 
-  client.on('success', ({user, code}) => {
-    io.emit('winner', {user, code})
-  });
+  socket.on('joinRoom', () => {
+    socket.emit('joinSuccess', {socketID: socket.id});
+  })
 
-  client.on('disconnect', () => {
+  socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 
