@@ -40,6 +40,7 @@ const App = () => {
 
     useEffect(() => {
         setSocket(io());
+        // console.log(socket.id)
     }, []);
 
 

@@ -32,18 +32,19 @@ app.use('/', (_, res) => {
   res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
 });
 
-io.on('connection', (client) => {
+io.on('connection', (socket) => {
   console.log('a user connected!');
+  console.log(socket.id);
   
-  client.on('keyDown', ({user, code}) => {
+  socket.on('keyDown', ({user, code}) => {
     io.emit('message', {user, code})
   });
 
-  client.on('success', ({user, code}) => {
+  socket.on('success', ({user, code}) => {
     io.emit('winner', {user, code})
   });
 
-  client.on('disconnect', () => {
+  socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 
