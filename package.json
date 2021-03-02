@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --verbose",
     "start": "cross-env NODE_ENV=production webpack",
-    "build": "cross-env NODE_ENV=production node server/server.js",
+    "build": "cross-env NODE_ENV=production node tsCompiled/server/server.js",
     "dev": "concurrently \"run-p tsc-dev webpack-dev\" \"cross-env NODE_ENV=development nodemon tsCompiled/server/server.js\"",
     "tsc-dev": "tsc --watch",
     "webpack-dev": "cross-env NODE_ENV=development webpack serve --open"
@@ -43,6 +43,7 @@
     "sass": "^1.32.8",
     "sass-loader": "^11.0.1",
     "socket.io": "^3.1.2",
+    "socket.io-client": "^3.1.2",
     "styled-components": "^5.2.1",
     "ts-loader": "^8.0.17"
   },

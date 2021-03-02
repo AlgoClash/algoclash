@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {io} from "socket.io-client";
 
 import Navbar from './Navbar';
 import Modal from './Modal';
@@ -11,13 +12,14 @@ import Tests from './Tests';
 import { EXanswer, EXquestion, EXtests } from '../testdata.js';
 
 const App = () => {
+    const [socket, setSocket] = useState<any>(null);
 
     const [id, setID] = useState<string>('');
     const [time, updateTime] = useState<Number>(600);
     const [totalRounds, setTotalRounds] = useState<Number>(3);
-    const [round, nextRound] = useState<Number>(1);
-    const [wins, addWin] = useState<Number>(0);
-    const [score, calculateScore] = useState<String>(100 * (wins / round) + '%');
+    const [round, nextRound] = useState<number>(1);
+    const [wins, addWin] = useState<number>(0);
+    const [score, calculateScore] = useState<any>(100 * (wins / round) + '%');
 
     const [playerCode, setPlayerCode] = useState<string>('');
     const [challengerCode, setChallengerCode] = useState<string>('const test = (arg) => { console.log("hello!"); }');
@@ -35,6 +37,11 @@ const App = () => {
     const [modalContent, setModalContent] = useState<any>(null);
 
     const [theme, setTheme] = useState<String>('dark');
+
+    useEffect(() => {
+        setSocket(io());
+    }, []);
+
 
     useEffect(() => {
         //Grab socket information
