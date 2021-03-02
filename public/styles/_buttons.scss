@@ -2,8 +2,12 @@ button{
     outline: none;
     border: 1px solid #5f97dc;
     border-radius: 4px;
-    padding: .5em 1em;
-    margin: .5em;
+    padding: .25em .5em;
+    margin: .25em;
+
+    &:hover{
+        cursor: pointer;
+    }
 }
 
 #testbtn{

@@ -4,6 +4,7 @@ import CodeMirror from '@skidding/react-codemirror';
 
 const options = {
     lineNumbers: true,
+    lineWrapping: true,
     mode: 'javascript',
     theme: 'lesser-dark',
 };
@@ -15,7 +16,7 @@ const Editor = (props) => {
     }
 
     return (
-        <div>
+        <div className='ide' >
 
             <div className='header'>
                 {props.username}

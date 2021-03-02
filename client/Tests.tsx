@@ -4,6 +4,7 @@ import CodeMirror from '@skidding/react-codemirror';
 
 const options = {
     lineNumbers: true,
+    lineWrapping: true,
     readOnly: true,
     mode: 'javascript',
     theme: 'base16-dark',
