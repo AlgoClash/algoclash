@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import {io} from "socket.io-client";
 
 import Navbar from './Navbar';
 import Modal from './Modal';
@@ -8,13 +9,10 @@ import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
 
-import {io} from "socket.io-client";
-
 import { EXanswer, EXquestion, EXtests } from '../testdata.js';
 
 const App = () => {
-
-    const { current: socket } = useRef(io());
+    const [socket, setSocket] = useState<any>(null);
 
     const [id, setID] = useState<string>('');
     const [time, updateTime] = useState<Number>(600);
@@ -40,6 +38,7 @@ const App = () => {
 
     const [theme, setTheme] = useState<String>('dark');
 
+<<<<<<< HEAD
     // useEffect(() => {
 
     //     try {
@@ -54,12 +53,34 @@ const App = () => {
     //     setTests(EXtests);
 
     //     return () => socket.close();
+=======
+    useEffect(() => {
+        setSocket(io());
+    }, []);
+
+
+    useEffect(() => {
+        //Grab socket information
+        setID('benji');
+
+        setPlayerCode(EXanswer);
+
+        setQuestion(EXquestion);
+
+        setTests(EXtests);
+>>>>>>> caf1641e97b3163d543207bdbadfccc8371d71dc
         
     // }, []);
 
+<<<<<<< HEAD
     // useEffect(() => {
     //     socket.emit('keyDown', {user: id, code: playerCode});
     // }, [playerCode]);
+=======
+    useEffect(() => {
+        setChallengerCode(playerCode);
+    }, [playerCode]);
+>>>>>>> caf1641e97b3163d543207bdbadfccc8371d71dc
 
     const writeToDom = () => {
         

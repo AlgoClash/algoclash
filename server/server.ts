@@ -2,8 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const app = express();
 const path = require('path');
-
-const httpServer = require('http').Server(app);
+const httpServer = require('http').createServer(app);
 const io = require('socket.io')(httpServer);
 
 const PORT = process.env.PORT || 3000;
@@ -33,25 +32,18 @@ app.use('/', (_, res) => {
   res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
 });
 
-io.on('connection', (socket) => {
+io.on('connection', (client) => {
   console.log('a user connected!');
-  console.log(socket.id);
   
-  socket.on('keyDown', ({user, code}) => {
-    console.log(user)
-    console.log(code)
+  client.on('keyDown', ({user, code}) => {
     io.emit('message', {user, code})
   });
 
-  // socket.on('success', ({user, code}) => {
-  //   io.emit('winner', {user, code})
-  // });
+  client.on('success', ({user, code}) => {
+    io.emit('winner', {user, code})
+  });
 
-  // socket.on('connect', () => {
-  //   console.log('user connected!');
-  // })
-
-  socket.on('disconnect', () => {
+  client.on('disconnect', () => {
     console.log('user disconnected');
   });
 
