@@ -113,9 +113,13 @@ module.exports = {
       ignored: /node_modules/,
     },
     proxy: {
-      '/': 'http://localhost:3000',
+      '*': 'http://localhost:3000',
       secure: false,
-      changeOrigin: true
+      changeOrigin: true,
+      '/socket.io': {
+        target: 'http://localhost:3000',
+        ws: true
+      }
     },
   },
 };

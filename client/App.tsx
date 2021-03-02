@@ -8,15 +8,15 @@ import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
 
-import {io} from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 import { EXanswer, EXquestion, EXtests } from '../testdata.js';
 
 const App = () => {
 
-    const { current: socket } = useRef(io());
-
     const [id, setID] = useState<string>('');
+    const socket = useRef<Socket>();
+    
     const [time, updateTime] = useState<Number>(600);
     const [totalRounds, setTotalRounds] = useState<Number>(3);
     const [round, nextRound] = useState<number>(1);
@@ -42,23 +42,20 @@ const App = () => {
 
     useEffect(() => {
 
-        try {
-            socket.open();
-            socket.on('connect', data => setID(socket.id));
-        } catch (error) {
-            console.log(error);
-        } finally {
-            socket.close();
-        }
+        socket.current = io('http://localhost:8080');
+        socket.current.emit('joinRoom', {});
+        socket.current.on('joinSuccess', data => setID(data.socketID));
 
         setPlayerCode(EXanswer);
         setQuestion(EXquestion);
         setTests(EXtests);
 
+        return () => { socket.current?.disconnect(); };
+
     }, []);
 
     useEffect(() => {
-        socket.emit('keyDown', {user: id, code: playerCode});
+        socket.current?.emit('keyDown', {data: playerCode});
     }, [playerCode]);
 
     const writeToDom = () => {
@@ -97,7 +94,7 @@ const App = () => {
 
             <Navbar createModal={createModal} />
             {modal ? <Modal title={modalTitle} contents={modalContent} /> : ''}
-            <div id='preventclick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${modal ? '50' : '-10'}`, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
+            <div id='preventclick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: modal ? 50 : -10, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
 
             <div id='appcontainer' style={{filter: `${modal ? 'blur(5px)' : ''}`}}>
 
