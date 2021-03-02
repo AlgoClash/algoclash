@@ -1,0 +1,14 @@
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+::-webkit-scrollbar-track {
+    background: transparentize(black, $amount: .85);
+    z-index: 50;
+}
+  
+::-webkit-scrollbar-thumb {
+    background: #424242;
+    z-index: 50;
+}
