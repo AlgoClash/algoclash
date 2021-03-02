@@ -9,6 +9,8 @@ import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
 
+import { EXanswer, EXquestion, EXtests } from '../testdata.js';
+
 const App = () => {
     const [socket, setSocket] = useState(null);
 
@@ -34,11 +36,7 @@ const App = () => {
     const [modalTitle, setModalTitle] = useState<String>('');
     const [modalContent, setModalContent] = useState<any>(null);
 
-    const srcDoc = `
-        <html>
-            <script>${js}</script>
-        </html>
-    `;
+    const [theme, setTheme] = useState<String>('dark');
 
     useEffect(() => {
         setSocket(io());
@@ -49,113 +47,11 @@ const App = () => {
         //Grab socket information
         setID('benji');
 
-        setPlayerCode(
-`const twoSum = (arr, target) => {
-    let pair = false;
+        setPlayerCode(EXanswer);
 
-    arr.forEach((val, index) => {
-        if (arr.slice(index+1, arr.length).includes(target - val))
-        pair = true;
-    })
+        setQuestion(EXquestion);
 
-    return;
-}
-    
-
-const nums = [2, 5, 11, 15]
-twoSum(nums, 7);`
-        );
-
-        setQuestion(
-`/*
-  Given an array of numbers and a target number,
-  return true if two of the numbers in the array add up to the target.
-  Otherwise, return false.
-
-  You may assume that each input would have exactly one solution, and you may not use the same element twice.
-  The straightforward way to solve this problem would take O(n²)time. Is it possible to do this in O(n) time? 
-
-  Example:
-
-  const nums = [2, 5, 11, 15]
-  twoSum(num, 7) -> true
-  Rational:  nums[0] + nums[1] = 2 + 5 = 7,
-
-  twoSum(nums, 9) -> false
-  Rational: No elements inside the array sum up to the target number
-*/
-        `);
-
-        setTests(
-`const { twoSum, threeSum } = require('../challenges/two-sum.js');
-
-describe('twoSum test', () => {
-  let arr;
-
-  it('should return true if two numbers sum to n', () => {
-    arr = [1, 4, 6, 12, 9];
-    expect(twoSum(arr, 10)).toBe(true);
-    arr = [1, 4, 6, 12, 9];
-    expect(twoSum(arr, 16)).toBe(true);
-    arr = [1, 4, 7, 2, 9, 0];
-    expect(twoSum(arr, 7)).toBe(true);
-  });
-
-  it('should work with negative numbers', () => {
-    arr = [-1, 4, 6, 12, 9];
-    expect(twoSum(arr, 8)).toBe(true);
-    arr = [-1, -1, -2, -4, -5]
-    expect(twoSum(arr, -2)).toBe(true);
-  });
-
-  it('should return false if two numbers DO NOT sum to n', () => {
-    arr = [1, 4, 6, 12, 9];
-    expect(twoSum(arr, 2)).toBe(false);
-    arr = [1, 4, 6, 12, 9];
-    expect(twoSum(arr, 45)).toBe(false);
-    arr = [1, 4, 7, 2, 9, 0];
-    expect(twoSum(arr, 17)).toBe(false);
-  });
-
-});
-
-xdescribe('threeSum test', () => {
-  let arr;
-
-  it('should return true if three numbers sum to n', () => {
-    arr = [2, 5, 11, 15];
-    expect(threeSum(arr, 18)).toBe(true);
-    arr = [2, 5, 11, 15];;
-    expect(threeSum(arr, 22)).toBe(true);
-    arr = [2, 5, 11, 15];;
-    expect(threeSum(arr, 31)).toBe(true);
-  });
-
-  it('should work with negative numbers', () => {
-    arr = [-1, 4, 6, 12, 9]
-    expect(threeSum(arr, 22)).toBe(true);
-    arr = [-1, 4, 6, 12, 9]
-    expect(threeSum(arr, 9)).toBe(true);
-    arr = [-1, 4, 6, 12, 9];
-    expect(threeSum(arr, 20)).toBe(true);
-    arr = [-1, -4, 5, 12, 9];
-    expect(threeSum(arr, 0)).toBe(true);
-    arr = [-1, -1, -2, -4, -5]
-    expect(threeSum(arr, -4)).toBe(true);
-  });
-
-  it('should return false if three numbers DO NOT sum to n', () => {
-    arr = [1, 4, 6, 12, 9];
-    expect(threeSum(arr, 2)).toBe(false);
-    arr = [1, 4, 6, 12, 9];
-    expect(threeSum(arr, 45)).toBe(false);
-    arr = [1, 4, 7, 2, 9, 0];
-    expect(threeSum(arr, 19)).toBe(false);
-  });
-
-});
-
-        `);
+        setTests(EXtests);
         
     }, []);
 
@@ -204,16 +100,16 @@ xdescribe('threeSum test', () => {
             <div id='appcontainer' style={{filter: `${modal ? 'blur(5px)' : ''}`}}>
 
                 <div id='questioncontainer'>
-                    <Question value={question} />
+                    <Question value={question} theme={theme} />
                 </div>
 
                 <div id='editorcontainer' className={`${collapsed ? 'collapsed' : ''}`}>
-                    <Editor user='player' username={`${id} (You)`} lanuage='js' value={playerCode} onChange={setPlayerCode} collapse={collapseChallenger} collapsed={collapsed} />
-                    {collapsed ? '' : <Editor user='challenger' username={'challenger'} lanuage='js' value={challengerCode} onChange={setChallengerCode} />}
+                    <Editor user='player' username={`${id} (You)`} lanuage='js' value={playerCode} onChange={setPlayerCode} collapse={collapseChallenger} collapsed={collapsed} theme={theme} />
+                    {collapsed ? '' : <Editor user='challenger' username={'challenger'} lanuage='js' value={challengerCode} onChange={setChallengerCode} theme={theme} />}
                 </div>
                 
                 <div id='testcontainer'>
-                    <Tests value={tests} />
+                    <Tests value={tests} theme={theme} js={js} />
                 </div>
 
                 <div id='consolecontainer'>
@@ -233,18 +129,6 @@ xdescribe('threeSum test', () => {
                         <button id='submitbtn' onClick={writeToDom} >SUBMIT</button>
                     </div>
                 </div>
-
-                {/* <div id='terminal'>
-                    <iframe
-                    id='iframe'
-                    srcDoc={srcDoc}
-                    title='output'
-                    sandbox='allow-scripts'
-                    frameBorder='0'
-                    width='100%'
-                    height='100%'
-                    />
-                </div> */}
 
             </div>
         </>
