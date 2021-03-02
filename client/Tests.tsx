@@ -3,20 +3,20 @@ import React from 'react';
 import CodeMirror from '@skidding/react-codemirror';
 
 const options = {
-    lineNumbers: false,
+    lineNumbers: true,
     readOnly: true,
     mode: 'javascript',
-    theme: 'colorforth',
+    theme: 'base16-dark',
 };
 
-const Console = (props) => {
+const Tests = (props) => {
     return (
         <>
-            <div className='header'>Console</div>
+            <div className='header'>Tests</div>
 
             <CodeMirror options={options} value={props.value} />
         </>
     );
 }
 
-export default Console;
+export default Tests;

@@ -1,20 +1,62 @@
+@import 'palette';
+@import 'buttons';
 @import 'editor';
 
 body{
-    margin: 0;
+    margin: 3rem;
+    margin-top: 2rem;
+    background-color: #303133;//393d3f
+}
+
+#container{
+    display: grid;
+    grid-template-columns: .5fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    gap: 32px;
+    height: 100%;
+    width: 100%;
+}
+
+#editorcontainer{
+    grid-column: 2 / 4;
+    grid-row: 1 / 4;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
 }
 
 #questioncontainer{
-
+    grid-column: 1;
+    grid-row: 1 / 3;
 }
 
 #testcontainer{
-    
+    grid-column: 1;
+    grid-row: 3 / 5;
+    margin-top: 32px;
 }
 
 #consolecontainer{
-    user-select: none;
-    pointer-events: none;
+    grid-column: 2 / 3;
+    grid-row: 4 / 5;
+}
+
+#btncontainer{
+    grid-column: 3;
+    grid-row: 4 / 5;
+}
+
+.header{
+    text-align: center;
+    font-family: monospace;
+    font-size: 16px;
+    color: #eaeaea;
+    background-color: #262729;
+    // border-bottom: 2px solid #424242;
+    // border-radius: 8px 8px 0px 0px;
+    padding: .5rem;
 }
 
 // #terminal{
@@ -22,3 +64,7 @@ body{
 //     height: 50vh;
 //     background-color: blue;
 // }
+
+.CodeMirror {
+    height: 100% !important;
+}

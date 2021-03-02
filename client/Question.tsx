@@ -6,17 +6,17 @@ const options = {
     lineNumbers: false,
     readOnly: true,
     mode: 'javascript',
-    theme: 'colorforth',
+    theme: 'lesser-dark',
 };
 
-const Console = (props) => {
+const Question = (props) => {
     return (
         <>
-            <div className='header'>Console</div>
+            <div className='header'>Question</div>
 
             <CodeMirror options={options} value={props.value} />
         </>
     );
 }
 
-export default Console;
+export default Question;
