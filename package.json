@@ -25,6 +25,7 @@
   "dependencies": {
     "@skidding/react-codemirror": "^1.0.2",
     "codemirror": "^5.59.4",
+    "cookie-parser": "^1.4.5",
     "cross-env": "^7.0.3",
     "css-loader": "^5.1.1",
     "express": "^4.17.1",

@@ -12,18 +12,20 @@ const ghClientId = githubClientId
 const redirectURL = githubRedirectURL
 
 const Navbar = (props) => {
-    const [username, setUserName] = useState('')
-    const [password, setPassword] = useState('')
+    let username;
+    let password;
+
+    const usernameInput = (e) => {username = e.target.value}
+    const passwordInput = (e) => {password = e.target.value}
 
     const submitButton = (e) => {
         e.preventDefault()
-        console.log(username)
-        // const body = {username: username, password: passwordState}
-        // fetch('/user/signup', { method: 'POST', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body) })
-        // .then(data => console.log('navbar verify user -------> ', data))
-    }
-    console.log(username, password)
+        const body = {username, password}
 
+        fetch('/user/signup', { method: 'POST', headers: { 'Content-Type': 'Application/JSON' }, body: JSON.stringify(body) })
+        .then(res => {
+            if (res.status === 200) console.log('POSTED --------------', res.json())})
+    }
 
     const onSuccessGoogle = (res) => {
         console.log('[Login Success] currentUser:', res.profileObj);
@@ -47,11 +49,11 @@ const Navbar = (props) => {
         props.createModal('Login/Sign Up', (
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} >
             <h1 style={{fontFamily: 'monospace', fontSize: '16px', color: 'white'}} >Username</h1>
-            <input type='text' onChange={e => setUserName(e.target.value)}/>
+            <input type='text' onChange={usernameInput}/>
 
             <h1 style={{fontFamily: 'monospace', fontSize: '16px', color: 'white'}}>Password</h1>
-            <input type='text' onChange={e => setPassword(e.target.value)} />
-            <button onClick={submitButton} type='submit'>Confirm</button>
+            <input type='text' onChange={passwordInput} />
+            <button onClick={submitButton} type="button">Confirm</button>
 
             <GoogleLogin 
                 clientId={googleClientID}
