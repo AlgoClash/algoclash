@@ -20,6 +20,7 @@ const Editor = (props) => {
 
             <div className='header'>
                 {props.username}
+                {props.user === 'challenger' ? '' : <button id='collapse' onClick={() => props.collapse(!props.collapsed)}>{props.collapsed ? `<<` : `>>`}</button>}
             </div>
 
             <div className={`editor ${props.user === 'challenger' ? 'challenger' : 'player'}`} >
