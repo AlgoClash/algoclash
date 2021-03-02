@@ -2,21 +2,21 @@ import React from 'react';
 
 import CodeMirror from '@skidding/react-codemirror';
 
-const options = {
-    lineNumbers: false,
-    lineWrapping: true,
-    readOnly: true,
-    mode: 'javascript',
-    theme: 'lesser-dark',
-};
-
 const Question = (props) => {
+
+    const options = {
+        lineNumbers: false,
+        lineWrapping: true,
+        mode: 'javascript',
+        theme: `${props.theme === 'light' ? 'default' : 'lesser-dark'}`,
+    };
+
     return (
-        <>
+        <div id='question'>
             <div className='header'>Question</div>
 
             <CodeMirror options={options} value={props.value} />
-        </>
+        </div>
     );
 }
 

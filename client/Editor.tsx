@@ -2,14 +2,14 @@ import React from 'react';
 
 import CodeMirror from '@skidding/react-codemirror';
 
-const options = {
-    lineNumbers: true,
-    lineWrapping: true,
-    mode: 'javascript',
-    theme: 'lesser-dark',
-};
-
 const Editor = (props) => {
+
+    const options = {
+        lineNumbers: true,
+        lineWrapping: true,
+        mode: 'javascript',
+        theme: `${props.theme === 'light' ? 'default' : 'lesser-dark'}`,
+    };
 
     const handleChange = (value) => {
         props.onChange(value);

@@ -1,6 +1,6 @@
 button{
     outline: none;
-    border: 1px solid #5f97dc;
+    border: 1px solid $btn;
     border-radius: 4px;
     padding: .25em .5em;
     margin: .25em;
@@ -11,27 +11,27 @@ button{
 }
 
 #testbtn{
-    color: #5f97dc;
-    background-color: #262729;
+    color: $btn;
+    background-color: transparent;
 
     &:hover{
-        background-color: #0b0c0c;
-        color: #8cb3e5;
+        background-color: $container;
+        color: $btnhover;
     }
 }
 
 #submitbtn{
-    color: #131414;
-    background-color: #5f97dc;
+    color: $container;
+    background-color: $btn;
 
     &:hover{
-        background-color: #8cb3e5;
+        background-color: $btnhover;
     }
 }
 
 #collapse{
     background-color: transparent;
-    color: white;
+    color: $text;
     outline: none;
     border: none;
 }

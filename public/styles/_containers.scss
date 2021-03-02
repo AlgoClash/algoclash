@@ -1,0 +1,21 @@
+.header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: monospace;
+    font-size: 16px;
+    color: $text;
+    background-color: $header;
+    border-bottom: 2px solid $trim;
+    border-radius: 4px 4px 0px 0px;
+    padding: .5rem;
+    max-height: 1rem;
+
+    z-index: 10;
+}
+
+.CodeMirror {
+    height: 100% !important;
+}

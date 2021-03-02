@@ -1,13 +1,31 @@
 @import 'palette';
+
+html[data-theme="dark"]{
+    $bg: #303133;
+    $header: #262729;
+    $trim: #424242;
+    $container: #151515;
+    $gutter: #202020;
+    $container-secondary: #262626;
+    $navbar: #424242;
+    $text: #eaeaea;
+    
+    $btn: #7d4e57ff;
+    $btnhover: #d66853ff;
+}
+
 @import 'buttons';
+@import 'containers';
 @import 'editor';
+@import 'question';
+@import 'tests';
 @import 'navbar';
 @import 'modal';
 @import 'scrollbar';
 
 body{
     margin: 3em;
-    background-color: #303133;
+    background-color: $bg;
 }
 
 #appcontainer{
@@ -60,7 +78,7 @@ body{
     grid-row: 4;
 
     margin-bottom: -2rem;
-    background-color: #262729;
+    background-color: $header;
 
     display: flex;
     flex-direction: column;
@@ -69,9 +87,9 @@ body{
 
     h1{
         font-family: monospace;
-        color: #eaeaea;
-        border: 1px solid #424242;
-        background-color: #151515; //#202020
+        color: $text;
+        border: 1px solid $trim;
+        background-color: $container;
         padding: .25rem .5rem;
         user-select: none;
         margin: .25rem;
@@ -86,8 +104,7 @@ body{
     h2{
         font-family: monospace;
         font-size: 32px;
-        // line-height: 0;
-        color: #5f97dc;
+        color: $btnhover;
         margin: 0;
     }
 
@@ -95,7 +112,7 @@ body{
         font-family: monospace;
         font-size: 12px;
         line-height: 0;
-        color: #eaeaea;
+        color: $text;
         margin: 0;
     }
 
@@ -103,30 +120,6 @@ body{
         display: flex;
         justify-content: space-between;
     }
-}
-
-.header{
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-family: monospace;
-    font-size: 16px;
-    color: #eaeaea;
-    background-color: #262729;
-    border-bottom: 2px solid #424242;
-    border-radius: 4px 4px 0px 0px;
-    padding: .5rem;
-    max-height: 1rem;
-
-    box-shadow: 0px 4px 8px -4px rgba(0,0,0,.15);
-    z-index: 10;
-}
-
-.CodeMirror {
-    height: 100% !important;
-    // width: 100% !important;
 }
 
 #preventclick{
