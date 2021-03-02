@@ -2,11 +2,17 @@
 const path = require('path');
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const httpServer = require('http').createServer(app);
+const io = require('socket.io')(httpServer);
 const PORT = process.env.PORT || 3000;
 io.on('connection', (socket) => {
     console.log('a user connected!');
+    socket.on('keyDown', ({ user, code }) => {
+        io.emit('message', { user, code });
+    });
+    socket.on('success', ({ user, code }) => {
+        io.emit('winner', { user, code });
+    });
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
@@ -34,5 +40,5 @@ app.use((err, _, res, next) => {
     console.log(errorObj.log);
     return res.status(errorObj.status).json(errorObj.message);
 });
-http.listen(PORT, () => console.log(`listening on: ${PORT}!`));
+httpServer.listen(PORT, () => console.log(`listening on: ${PORT}!`));
 //# sourceMappingURL=server.js.map

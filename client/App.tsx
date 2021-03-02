@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import io from "socket.io-client";
 
 import Navbar from './Navbar';
 import Modal from './Modal';
@@ -8,7 +9,11 @@ import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
 
+const socket = io.connect('http://localhost:3000')
+
 const App = () => {
+
+    const [socket, setSocket] = useState(null);
 
     const [id, setID] = useState<string>('');
     const [time, updateTime] = useState<Number>(600);
@@ -37,6 +42,11 @@ const App = () => {
             <script>${js}</script>
         </html>
     `;
+
+    // useEffect(() => {
+    //     setSocket(io());
+    // }, []);
+
 
     useEffect(() => {
         //Grab socket information
