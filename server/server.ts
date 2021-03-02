@@ -6,23 +6,6 @@ const io = require('socket.io')(httpServer);
 
 const PORT = process.env.PORT || 3000;
 
-io.on('connection', (socket) => {
-  console.log('a user connected!');
-  
-  socket.on('keyDown', ({user, code}) => {
-    io.emit('message', {user, code})
-  });
-
-  socket.on('success', ({user, code}) => {
-    io.emit('winner', {user, code})
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
-});
-
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
@@ -35,6 +18,23 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use('/', (_, res) => {
     res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
+});
+
+io.on('connection', (client) => {
+  console.log('a user connected!');
+  
+  client.on('keyDown', ({user, code}) => {
+    io.emit('message', {user, code})
+  });
+
+  client.on('success', ({user, code}) => {
+    io.emit('winner', {user, code})
+  });
+
+  client.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
 });
 
 // global error handler --->

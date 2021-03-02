@@ -9,10 +9,7 @@ import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
 
-const socket = io.connect('http://localhost:3000')
-
 const App = () => {
-
     const [socket, setSocket] = useState(null);
 
     const [id, setID] = useState<string>('');
@@ -43,9 +40,9 @@ const App = () => {
         </html>
     `;
 
-    // useEffect(() => {
-    //     setSocket(io());
-    // }, []);
+    useEffect(() => {
+        setSocket(io());
+    }, []);
 
 
     useEffect(() => {
