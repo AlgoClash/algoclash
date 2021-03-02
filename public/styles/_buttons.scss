@@ -1,0 +1,37 @@
+button{
+    outline: none;
+    border: 1px solid #5f97dc;
+    border-radius: 4px;
+    padding: .25em .5em;
+    margin: .25em;
+
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+#testbtn{
+    color: #5f97dc;
+    background-color: #262729;
+
+    &:hover{
+        background-color: #0b0c0c;
+        color: #8cb3e5;
+    }
+}
+
+#submitbtn{
+    color: #131414;
+    background-color: #5f97dc;
+
+    &:hover{
+        background-color: #8cb3e5;
+    }
+}
+
+#collapse{
+    background-color: transparent;
+    color: white;
+    outline: none;
+    border: none;
+}
