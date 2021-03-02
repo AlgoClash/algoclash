@@ -47,14 +47,14 @@ const App = () => {
             socket.on('connect', data => setID(socket.id));
         } catch (error) {
             console.log(error);
+        } finally {
+            socket.close();
         }
 
         setPlayerCode(EXanswer);
         setQuestion(EXquestion);
         setTests(EXtests);
 
-        return () => socket.close();
-        
     }, []);
 
     useEffect(() => {
