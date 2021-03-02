@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import {io} from "socket.io-client";
 
 import Navbar from './Navbar';
 import Modal from './Modal';
@@ -8,13 +9,10 @@ import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
 
-import {io} from "socket.io-client";
-
 import { EXanswer, EXquestion, EXtests } from '../testdata.js';
 
 const App = () => {
-
-    const { current: socket } = useRef(io());
+    const [socket, setSocket] = useState<any>(null);
 
     const [id, setID] = useState<string>('');
     const [time, updateTime] = useState<Number>(600);
@@ -41,24 +39,24 @@ const App = () => {
     const [theme, setTheme] = useState<String>('dark');
 
     useEffect(() => {
+        setSocket(io());
+    }, []);
 
-        try {
-            socket.open();
-            socket.on('connect', data => setID(socket.id));
-        } catch (error) {
-            console.log(error);
-        }
+
+    useEffect(() => {
+        //Grab socket information
+        setID('benji');
 
         setPlayerCode(EXanswer);
-        setQuestion(EXquestion);
-        setTests(EXtests);
 
-        return () => socket.close();
+        setQuestion(EXquestion);
+
+        setTests(EXtests);
         
     }, []);
 
     useEffect(() => {
-        socket.emit('keyDown', {user: id, code: playerCode});
+        setChallengerCode(playerCode);
     }, [playerCode]);
 
     const writeToDom = () => {
