@@ -1,8 +1,5 @@
 const express = require('express');
-<<<<<<< HEAD
-=======
 const cookieParser = require('cookie-parser');
->>>>>>> 5347bbe6c05961fba09225e61852d8f9357121af
 const app = express();
 const path = require('path');
 const httpServer = require('http').createServer(app);
