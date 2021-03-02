@@ -23,15 +23,15 @@ describe('FrontendFunction tests', () => {
   });
 
   describe('FrontendFunction should render with passed-in props', () => {
+    // declare test props
+    const testProps = 'hi';
     it('should return a div wrapper of class .testComponent', () => {
-      const container = shallow(<FrontendFunction />);
+      // pass test props into shallow render
+      const container = shallow(<FrontendFunction displayText={testProps} />);
       expect(container.find('div').hasClass('testComponent')).toEqual(true);
     });
 
     it('should return a list of <p> elements with value of passed-in prop & length of 5', () => {
-      // declare test props
-      const testProps = 'hi';
-      // pass test props into shallow render
       const container = shallow(<FrontendFunction displayText={testProps} />);
       expect(container.find('p').length).toEqual(5);
       // search for list of elements, get inner text of 0th element, test assertion
