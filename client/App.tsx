@@ -38,22 +38,6 @@ const App = () => {
 
     const [theme, setTheme] = useState<String>('dark');
 
-<<<<<<< HEAD
-    // useEffect(() => {
-
-    //     try {
-    //         socket.open();
-    //         socket.on('connect', data => setID(socket.id));
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-
-    //     setPlayerCode(EXanswer);
-    //     setQuestion(EXquestion);
-    //     setTests(EXtests);
-
-    //     return () => socket.close();
-=======
     useEffect(() => {
         setSocket(io());
     }, []);
@@ -68,19 +52,12 @@ const App = () => {
         setQuestion(EXquestion);
 
         setTests(EXtests);
->>>>>>> caf1641e97b3163d543207bdbadfccc8371d71dc
         
-    // }, []);
+    }, []);
 
-<<<<<<< HEAD
-    // useEffect(() => {
-    //     socket.emit('keyDown', {user: id, code: playerCode});
-    // }, [playerCode]);
-=======
     useEffect(() => {
         setChallengerCode(playerCode);
     }, [playerCode]);
->>>>>>> caf1641e97b3163d543207bdbadfccc8371d71dc
 
     const writeToDom = () => {
         
