@@ -16,6 +16,7 @@ const App = () => {
 
     const [id, setID] = useState<string>('');
     const socket = useRef<Socket>();
+    const [room, setRoom] = useState<string>('');
     
     const [time, updateTime] = useState<Number>(600);
     const [totalRounds, setTotalRounds] = useState<Number>(3);
@@ -42,9 +43,10 @@ const App = () => {
 
     useEffect(() => {
 
-        socket.current = io('http://localhost:8080');
-        socket.current.emit('joinRoom', {});
-        socket.current.on('joinSuccess', data => setID(data.socketID));
+        socket.current = io();
+
+        socket.current.on('connect', () => socket.current?.emit('connectClient'));
+        socket.current.on('connectSuccess', data => setID(data.socketID));
 
         setPlayerCode(EXanswer);
         setQuestion(EXquestion);
@@ -53,6 +55,15 @@ const App = () => {
         return () => { socket.current?.disconnect(); };
 
     }, []);
+
+    const createRoom = (roomID) => {
+        socket.current?.emit('createRoom', {roomID});
+        setRoom(roomID);
+    }
+
+    const joinRoom = () => {
+        socket.current?.emit('joinRoom', {userID: id, roomID: room});
+    }
 
     useEffect(() => {
         socket.current?.emit('keyDown', {data: playerCode});
@@ -92,7 +103,7 @@ const App = () => {
     return (
         <>
 
-            <Navbar createModal={createModal} />
+            <Navbar createModal={createModal} createRoom={createRoom} joinRoom={joinRoom} />
             {modal ? <Modal title={modalTitle} contents={modalContent} /> : ''}
             <div id='preventclick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: modal ? 50 : -10, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
 

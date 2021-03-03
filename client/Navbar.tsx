@@ -44,7 +44,6 @@ const Navbar = (props) => {
         console.log('[Login failed] res:', res);
     }
 
-
     const createSignInModal = () => {
         props.createModal('Login/Sign Up', (
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} >
@@ -75,6 +74,12 @@ const Navbar = (props) => {
     return (
         <div id='navbar'>
             <a href="/">Algo Clash</a>
+
+            <div style={{display: 'flex'}} >
+                <button onClick={() => props.createRoom('testroom')}>CREATE ROOM</button>
+                <button onClick={props.joinRoom}>JOIN ROOM</button>
+            </div>
+
             <div>
                 <a onClick={createSignInModal} >Login/Sign Up</a>
                 <a>{`≡`}</a>
