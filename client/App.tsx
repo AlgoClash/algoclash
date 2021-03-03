@@ -67,7 +67,6 @@ const App = () => {
 
         socket.current?.on('playerJoined', ({totalPlayers}) => {
             if (totalPlayers.length > 1) setChallengerID(totalPlayers.filter(playerID => playerID !== id)[0]);
-            console.log(totalPlayers);
         });
 
         socket.current?.on('writeCode', ({userID, code}) => {
@@ -100,11 +99,8 @@ const App = () => {
     }, [playerCode]);
 
     const evaluateCode = () => {
-
-        let output = executeCode(playerCode);
-        if (output === undefined) output = 'undefined';
-        writeConsole(output);
-
+        const code = executeCode(playerCode);
+        writeConsole(code);
     }
 
     const createModal = (title, content) => {
