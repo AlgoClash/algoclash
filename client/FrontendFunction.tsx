@@ -2,9 +2,9 @@ import React from 'react';
 
 const FrontendFunction = (props) => {
 
-  const frontendMethod = (param: string): string[] => {
+  const frontendMethod = (param: string): JSX.Element[] => {
     // should print passed in param 5 times and store in an array
-    const concatArr: string[] = [];
+    const concatArr: JSX.Element[] = [];
     for (let i = 1; i <= 5; i += 1) {
       concatArr.push(<p>{param}</p>);
     }

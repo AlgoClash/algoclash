@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 
 const userRoute = require('./routes/User')
+const algoRoute = require('./routes/Algo')
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -23,17 +24,18 @@ if (process.env.NODE_ENV === 'production') {
   });
 };
 
-app.use('/user', userRoute)
+app.use('/user', userRoute);
 
-app.use('/', (_, res) => {
-  res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
+app.use('/algo', algoRoute);
+
+app.get('/', (_, res) => {
+  return res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
 });
-
 
 // global error handler --->
 app.use((err, _, res, next) => {
     const defaultErr = {
-      log: 'Express error handler caught unknown middleware error',
+      log: `Express error handler caught unknown middleware error: ${err}`,
       status: 500,
       message: { err: 'An error occurred' },
     };

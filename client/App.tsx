@@ -15,8 +15,8 @@ const App = () => {
     const [id, setID] = useState<string>('');
     const [time, updateTime] = useState<Number>(600);
     const [totalRounds, setTotalRounds] = useState<Number>(3);
-    const [round, nextRound] = useState<Number>(1);
-    const [wins, addWin] = useState<Number>(0);
+    const [round, nextRound] = useState<number>(1);
+    const [wins, addWin] = useState<number>(0);
     const [score, calculateScore] = useState<String>(100 * (wins / round) + '%');
 
     const [playerCode, setPlayerCode] = useState<string>('');
@@ -35,32 +35,55 @@ const App = () => {
     const [modalContent, setModalContent] = useState<any>(null);
 
     const [theme, setTheme] = useState<String>('dark');
+    // compAlgos array holds completed algo names - need to invoke addAlgo(...compAlgos, curAlgo) on successful algo completion
+    const [compAlgos, setCompAlgos] = useState<string[]>([]);
+    // will hold current algo's name
+    const [curAlgo, setCurAlgo] = useState<string>('');
 
     useEffect(() => {
         //Grab socket information
         setID('benji');
-
-        setPlayerCode(EXanswer);
-
-        setQuestion(EXquestion);
-
-        setTests(EXtests);
-        
+        setPlayerCode(EXanswer);        
     }, []);
 
     useEffect(() => {
         setChallengerCode(playerCode);
     }, [playerCode]);
 
-    const writeToDom = () => {
-        
-        createModal('submit', (
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} >
-            <h1 style={{fontFamily: 'monospace', fontSize: '16px', color: 'white'}} >Are you sure you want to submit this answer?</h1>
-            <button>Confirm</button>
-        </div>));
+    // request new algo from db onmount & when a new completed algo is added to compAlgos
+    // not sure where this goes, inside socket server?
+    useEffect(() => {
+      // pass compAlgos array to get non-completed algo
+      fetch('/algo', {
+        method: 'POST', 
+        headers: { 'Content-Type': 'Application/JSON' },
+        body: JSON.stringify(compAlgos)
+      })
+      .then(res => res.json())
+      .then(algo => {
+        console.log('algo returned from fetch:', algo);
+        // sets returned algo question
+        setQuestion(algo.question);
+        // sets returned algo tests
+        setTests(algo.tests);
+        // store current algo name
+        setCurAlgo(algo.algoName);
+      })
+  }, [compAlgos]);
 
-        writeJS(playerCode);
+    const writeToDom = () => {
+        // createModal('submit', (
+        // <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} >
+        //     <h1 style={{fontFamily: 'monospace', fontSize: '16px', color: 'white'}} >Are you sure you want to submit this answer?</h1>
+        //     <button>Confirm</button>
+        // </div>));
+
+        // on successful question completion, add algo name to compAlgos
+        if(curAlgo.length) {
+          setCompAlgos([...compAlgos, curAlgo])
+        }
+
+        // writeJS(playerCode);
     }
 
     const evaluateCode = () => {
@@ -88,7 +111,7 @@ const App = () => {
 
             <Navbar createModal={createModal} />
             {modal ? <Modal title={modalTitle} contents={modalContent} /> : ''}
-            <div id='preventclick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: `${modal ? '50' : '-10'}`, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
+            <div id='preventclick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: modal ? 50 : -10, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
 
             <div id='appcontainer' style={{filter: `${modal ? 'blur(5px)' : ''}`}}>
 
