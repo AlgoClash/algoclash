@@ -42,7 +42,7 @@ const App = () => {
     const [modalTitle, setModalTitle] = useState<String>('');
     const [modalContent, setModalContent] = useState<any>(null);
 
-    const [theme, setTheme] = useState<String>('dark');
+    const [theme, setTheme] = useState<String>('');
 
     const [ready, setTimer] = useState<Boolean>(false);
 
@@ -101,8 +101,7 @@ const App = () => {
     }, [playerCode]);
 
     const evaluateCode = () => {
-        const code = executeCode(playerCode);
-        writeConsole(code);
+        writeConsole(playerConsole + ('\n').repeat(2) + executeCode(playerCode));
     }
 
     const createModal = (title, content) => {
@@ -112,6 +111,10 @@ const App = () => {
         toggleModal(true);
     }
 
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, [theme]);
+      
     const startTimer = () => {
         console.log('Starting Timer Function')
         if (!ready) setTimer(true)
@@ -129,8 +132,8 @@ const App = () => {
     return (
         <>
 
+            <Navbar createModal={createModal} room={room} createRoom={createRoom} joinRoom={joinRoom} theme={theme} setTheme={setTheme} />
 
-            <Navbar createModal={createModal} room={room} createRoom={createRoom} joinRoom={joinRoom} />
             {modal ? <Modal title={modalTitle} contents={modalContent} /> : ''}
             <div id='preventclick' onClick={() => {if (room !== '') toggleModal(false)}} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: modal ? 50 : -10, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
 
