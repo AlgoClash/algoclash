@@ -19,7 +19,7 @@ mongoose.connection.once("open", () => console.log("connected to database"));
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/build', express.static(path.join(__dirname, '../build')));
-  app.get('/', (req, res) => {
+  app.get('/', (_, res) => {
     return res.status(200).sendFile(path.join(__dirname, '../index.html'));
   });
 };
@@ -30,23 +30,44 @@ app.use('/', (_, res) => {
   res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
 });
 
+/* --- SOCKET.IO --- */
+
 const httpServer = require('http').Server(app);
 const io = require('socket.io')(httpServer);
 
+const _Room = require('./Room');
+const _Player = require('./Player');
+
+const rooms = <any>[];
+
 io.on('connection', (socket) => {
-  console.log('a user connected!');
-  // console.log(socket.id);
-  
-  socket.on('keyDown', (data) => {
-    console.log(data)
+
+  socket.on('connectClient', () => {
+    socket.emit('connectSuccess', {socketID: socket.id});
   });
 
-  socket.on('joinRoom', () => {
-    socket.emit('joinSuccess', {socketID: socket.id});
-  })
+  socket.on('createRoom', data => {
+    const newRoom = new _Room(data.roomID, []);
+    rooms.push(newRoom);
+  });
+
+  socket.on('joinRoom', data => {
+    console.log(data);
+
+    const newPlayer = new _Player(data.userID);
+
+    const targetRoom = rooms.findIndex(room => room.id === data.roomID);
+    rooms[targetRoom].addPlayer(newPlayer);
+
+    console.log('room:', rooms[targetRoom]);
+  });
+
+  socket.on('keyDown', (data) => {
+    //console.log(data);
+  });
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log(`user ${socket.id} disconnected`);
   });
 
 });
