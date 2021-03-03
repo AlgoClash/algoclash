@@ -9,6 +9,7 @@ import Editor from './Editor';
 import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
+import Submit from './Submit';
 
 import { io, Socket } from "socket.io-client";
 
@@ -26,7 +27,7 @@ const App = () => {
     const [totalRounds, setTotalRounds] = useState<Number>(3);
     const [round, nextRound] = useState<number>(1);
     const [wins, addWin] = useState<number>(0);
-    const [score, calculateScore] = useState<any>(100 * (wins / round) + '%');
+    const [score, calculateScore] = useState<string>('0%'); //100 * (wins / round) +'%'
 
     const [playerCode, setPlayerCode] = useState<string>('');
     const [challengerCode, setChallengerCode] = useState<string>('const test = (arg) => { console.log("hello!"); }');
@@ -90,6 +91,7 @@ const App = () => {
         setRoom(roomID);
         socket.current?.emit('joinRoom', {userID: id, roomID});
         toggleModal(false);
+
     }
 
     useEffect(() => {
@@ -115,6 +117,7 @@ const App = () => {
     return (
         <>
 
+
             <Navbar createModal={createModal} room={room} createRoom={createRoom} joinRoom={joinRoom} />
             {modal ? <Modal title={modalTitle} contents={modalContent} /> : ''}
             <div id='preventclick' onClick={() => {if (room !== '') toggleModal(false)}} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: modal ? 50 : -10, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
@@ -139,17 +142,7 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-                    <h1 id='timer' >00:30.999</h1>
-
-                    <div id='scoreboard'>
-                        <h2 id='score' >{score}</h2>
-                        <h3 id='round' >{round} of {totalRounds}</h3>
-                    </div>
-
-                    <div id='btncontainer' >
-                        <button id='testbtn' onClick={evaluateCode} >TEST</button>
-                        <button>SUBMIT</button>
-                    </div>
+                    <Submit score={score} round={round} totalRounds={totalRounds} evaluateCode={evaluateCode}/>
                 </div>
 
             </div>
@@ -158,3 +151,4 @@ const App = () => {
 }
 
 export default App;
+       
