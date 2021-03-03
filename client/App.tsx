@@ -15,6 +15,7 @@ import { EXanswer, EXquestion, EXtests } from '../testdata.js';
 const App = () => {
 
     const [id, setID] = useState<string>('');
+    const [challengerid, setChallengerID] = useState<string>('Waiting for partner...');
     const socket = useRef<Socket>();
     const [room, setRoom] = useState<string>('');
     
@@ -26,8 +27,6 @@ const App = () => {
 
     const [playerCode, setPlayerCode] = useState<string>('');
     const [challengerCode, setChallengerCode] = useState<string>('const test = (arg) => { console.log("hello!"); }');
-
-    const [js, writeJS] = useState<string>('');
 
     const [question, setQuestion] = useState<string>(``);
     const [tests, setTests] = useState<string>('');
@@ -56,6 +55,24 @@ const App = () => {
 
     }, []);
 
+    useEffect(() => {
+
+        if (id === '') return;
+
+        socket.current?.on('playerJoined', data => {
+            if (data.totalPlayers.length > 1) setChallengerID(data.totalPlayers.filter(playerID => playerID !== id)[0]);
+        });
+
+        socket.current?.on('writeCode', data => {
+
+            console.log(data.userID, id, data.userID === id);
+
+            if (data.userID === id)
+                return;
+            setChallengerCode(data.code);
+        });
+    }, [id]);
+
     const createRoom = (roomID) => {
         socket.current?.emit('createRoom', {roomID});
         setRoom(roomID);
@@ -66,19 +83,9 @@ const App = () => {
     }
 
     useEffect(() => {
-        socket.current?.emit('keyDown', {data: playerCode});
+        if (room === '') return;
+        socket.current?.emit('keyDown', {roomID: room, userID: id, code: playerCode});
     }, [playerCode]);
-
-    const writeToDom = () => {
-        
-        createModal('submit', (
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} >
-            <h1 style={{fontFamily: 'monospace', fontSize: '16px', color: 'white'}} >Are you sure you want to submit this answer?</h1>
-            <button>Confirm</button>
-        </div>));
-
-        writeJS(playerCode);
-    }
 
     const evaluateCode = () => {
         try {
@@ -115,11 +122,11 @@ const App = () => {
 
                 <div id='editorcontainer' className={`${collapsed ? 'collapsed' : ''}`}>
                     <Editor user='player' username={`${id} (You)`} lanuage='js' value={playerCode} onChange={setPlayerCode} collapse={collapseChallenger} collapsed={collapsed} theme={theme} />
-                    {collapsed ? '' : <Editor user='challenger' username={'challenger'} lanuage='js' value={challengerCode} onChange={setChallengerCode} theme={theme} />}
+                    {collapsed ? '' : <Editor user='challenger' username={`${challengerid} (Them)`} lanuage='js' value={challengerCode} onChange={setChallengerCode} theme={theme} />}
                 </div>
                 
                 <div id='testcontainer'>
-                    <Tests value={tests} theme={theme} js={js} />
+                    <Tests value={tests} theme={theme} />
                 </div>
 
                 <div id='consolecontainer'>
@@ -136,7 +143,7 @@ const App = () => {
 
                     <div id='btncontainer' >
                         <button id='testbtn' onClick={evaluateCode} >TEST</button>
-                        <button id='submitbtn' onClick={writeToDom} >SUBMIT</button>
+                        <button>SUBMIT</button>
                     </div>
                 </div>
 
