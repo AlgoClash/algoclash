@@ -30,18 +30,4 @@ describe('App tests', () => {
 
   });
 
-  describe('App should render without props', () => {
-
-    it('should render 9 divs', () => {
-      const container = shallow(<App />);
-      expect(container.find('div').length).toEqual(9);
-    });
-
-    it('should render the app container', () => {
-      const container = shallow(<App />);
-      expect(container.find('#appcontainer')).toHaveLength(1);
-    });
-
-  });
-
 });

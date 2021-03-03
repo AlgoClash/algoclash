@@ -13,7 +13,8 @@ import Tests from './Tests';
 import { io, Socket } from "socket.io-client";
 
 import { EXanswer, EXquestion, EXtests } from '../testdata.js';
-import executeCode from './execute';
+// import executeCode from './execute';
+import transpile from './transpile';
 
 const App = () => {
 
@@ -66,7 +67,6 @@ const App = () => {
 
         socket.current?.on('playerJoined', ({totalPlayers}) => {
             if (totalPlayers.length > 1) setChallengerID(totalPlayers.filter(playerID => playerID !== id)[0]);
-            console.log(totalPlayers);
         });
 
         socket.current?.on('writeCode', ({userID, code}) => {
@@ -98,11 +98,10 @@ const App = () => {
     }, [playerCode]);
 
     const evaluateCode = () => {
+        const [output, error] = transpile(playerCode);
+        const code: string = error.show ? error.errorMessage : new Function(output);
 
-        let output = executeCode(playerCode);
-        if (output === undefined) output = 'undefined';
-        writeConsole(output);
-
+        writeConsole(code);
     }
 
     const createModal = (title, content) => {
