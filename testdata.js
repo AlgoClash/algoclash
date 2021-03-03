@@ -1,18 +1,18 @@
 
 const EXanswer = `const twoSum = (arr, target) => {
-    let pair = false;
+  let pair = false;
 
-    arr.forEach((val, index) => {
-        if (arr.slice(index+1, arr.length).includes(target - val))
-        pair = true;
-    })
+  arr.forEach((val, index) => {
+      if (arr.slice(index+1, arr.length).includes(target - val))
+      pair = true;
+  })
 
-    return;
+  return 'yaaay';
 }
-    
+  
 
 const nums = [2, 5, 11, 15]
-twoSum(nums, 7);`;
+console.log(twoSum(nums, 7));`;
 
 const EXquestion = `/*
 Given an array of numbers and a target number,

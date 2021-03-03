@@ -11,8 +11,6 @@ import 'codemirror/theme/colorforth.css';
 import 'codemirror/theme/dracula.css';
 
 ReactDOM.render(
-  <React.StrictMode>
-      <App />
-  </React.StrictMode>,
+  <App />,
   document.getElementById('root')
 );
