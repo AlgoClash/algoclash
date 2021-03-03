@@ -44,6 +44,8 @@ const App = () => {
 
     const [theme, setTheme] = useState<String>('dark');
 
+    const [ready, setTimer] = useState<Boolean>(false);
+
     useEffect(() => {
 
         socket.current = io();
@@ -110,6 +112,20 @@ const App = () => {
         toggleModal(true);
     }
 
+    const startTimer = () => {
+        console.log('Starting Timer Function')
+        if (!ready) setTimer(true)
+    }
+
+    useEffect(() => {
+        if (ready === false) return;
+        console.log('useEffect for ready working')
+        socket.current?.emit('ready', {key: 'ready button clicked'});
+        socket.current?.on('ready2', (data) => {
+            console.log('ready2 response triggered')
+        })
+    }, [ready]);
+
     return (
         <>
 
@@ -138,7 +154,7 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-                    <Submit score={score} round={round} totalRounds={totalRounds} evaluateCode={evaluateCode}/>
+                    <Submit score={score} round={round} totalRounds={totalRounds} startTimer={startTimer}/>
                 </div>
 
             </div>
