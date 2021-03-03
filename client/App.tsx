@@ -115,7 +115,12 @@ const App = () => {
     }, [theme]);
       
     const startTimer = () => {
-        console.log('Starting Timer Function')
+        console.log('challenger id', challengerid)
+        if (challengerid === 'Waiting for partner...') {
+            console.log('timer can start')
+        } else {
+            console.log('waiting on other player')
+        }
         if (!ready) setTimer(true)
     }
 
@@ -156,7 +161,9 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-                    <Submit score={score} round={round} totalRounds={totalRounds} startTimer={startTimer} evaluateCode={evaluateCode} />
+
+                    <Submit score={score} round={round} totalRounds={totalRounds} time={time} startTimer={startTimer}/>
+
                 </div>
 
             </div>
