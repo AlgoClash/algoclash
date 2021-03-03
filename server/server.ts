@@ -19,7 +19,7 @@ mongoose.connection.once("open", () => console.log("connected to database"));
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/build', express.static(path.join(__dirname, '../build')));
-  app.get('/', (req, res) => {
+  app.get('/', (_, res) => {
     return res.status(200).sendFile(path.join(__dirname, '../index.html'));
   });
 };
@@ -30,23 +30,52 @@ app.use('/', (_, res) => {
   res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
 });
 
+/* --- SOCKET.IO --- */
+
 const httpServer = require('http').Server(app);
 const io = require('socket.io')(httpServer);
 
+const _Room = require('./Room');
+const _Player = require('./Player');
+
+const rooms = <any>[];
+
 io.on('connection', (socket) => {
-  console.log('a user connected!');
-  // console.log(socket.id);
-  
-  socket.on('keyDown', (data) => {
-    console.log(data)
+
+  socket.on('connectClient', () => {
+    socket.emit('connectSuccess', {socketID: socket.id});
   });
 
-  socket.on('joinRoom', () => {
-    socket.emit('joinSuccess', {socketID: socket.id});
-  })
+  socket.on('createRoom', data => {
+    const newRoom = new _Room(data.roomID, []);
+    rooms.push(newRoom);
+  });
+
+  socket.on('joinRoom', ({roomID, userID}) => {
+    const targetRoom = rooms.findIndex(room => room.id === roomID);
+
+    if (!rooms[targetRoom].players.some(player => player.id === userID)) {
+
+      const newPlayer = new _Player(userID);
+      rooms[targetRoom].addPlayer(newPlayer);
+
+      const totalPlayers = rooms[targetRoom].players.reduce((acc, player) => {
+        acc.push(player.id);
+        return acc;
+      }, []);
+
+      socket.join(rooms[targetRoom].id);
+      io.sockets.to(rooms[targetRoom].id).emit('playerJoined', {totalPlayers});
+    }
+  });
+
+  socket.on('keyDown', ({roomID, userID, code}) => {
+    const targetRoom = rooms.findIndex(room => room.id === roomID);
+    io.sockets.to(rooms[targetRoom].id).emit('writeCode', {userID, code});
+  });
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log(`user ${socket.id} disconnected`);
   });
 
 });
