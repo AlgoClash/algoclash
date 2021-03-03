@@ -7,7 +7,6 @@ const Submit = (props) => {
             <div>
                 <h1 id='timer' >00:30.999</h1>
                 <button id='testbtn' onClick={props.startTimer} >Start Counter</button>
-
             </div>
 
             <div id='scoreboard'>
