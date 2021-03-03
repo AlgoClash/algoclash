@@ -14,6 +14,12 @@ body{
     background-color: $bg;
 }
 
+h1{
+    color: $text;
+    font-family: monospace;
+    font-weight: 100;
+}
+
 #appcontainer{
     display: grid;
     grid-template-columns: 2fr 1fr 1fr .5fr;

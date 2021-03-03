@@ -46,9 +46,10 @@ io.on('connection', (socket) => {
     socket.emit('connectSuccess', {socketID: socket.id});
   });
 
-  socket.on('createRoom', data => {
-    const newRoom = new _Room(data.roomID, []);
+  socket.on('createRoom', ({roomID}) => {
+    const newRoom = new _Room(roomID, []);
     rooms.push(newRoom);
+    socket.emit('createSuccess', {roomID});
   });
 
   socket.on('joinRoom', ({roomID, userID}) => {
