@@ -51,19 +51,27 @@ io.on('connection', (socket) => {
     rooms.push(newRoom);
   });
 
-  socket.on('joinRoom', data => {
-    console.log(data);
+  socket.on('joinRoom', ({roomID, userID}) => {
+    const targetRoom = rooms.findIndex(room => room.id === roomID);
 
-    const newPlayer = new _Player(data.userID);
+    if (!rooms[targetRoom].players.some(player => player.id === userID)) {
 
-    const targetRoom = rooms.findIndex(room => room.id === data.roomID);
-    rooms[targetRoom].addPlayer(newPlayer);
+      const newPlayer = new _Player(userID);
+      rooms[targetRoom].addPlayer(newPlayer);
 
-    console.log('room:', rooms[targetRoom]);
+      const totalPlayers = rooms[targetRoom].players.reduce((acc, player) => {
+        acc.push(player.id);
+        return acc;
+      }, []);
+
+      socket.join(rooms[targetRoom].id);
+      io.sockets.to(rooms[targetRoom].id).emit('playerJoined', {totalPlayers});
+    }
   });
 
-  socket.on('keyDown', (data) => {
-    //console.log(data);
+  socket.on('keyDown', ({roomID, userID, code}) => {
+    const targetRoom = rooms.findIndex(room => room.id === roomID);
+    io.sockets.to(rooms[targetRoom].id).emit('writeCode', {userID, code});
   });
 
   socket.on('disconnect', () => {
