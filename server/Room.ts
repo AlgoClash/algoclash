@@ -5,7 +5,7 @@ class Room {
     questions: string;
     answered: number;
     winner: string;
-    room: number;
+    ready: number;
 
     constructor(id: string, questions){
         this.id = id;
@@ -13,7 +13,7 @@ class Room {
         this.questions = questions;
         this.answered = 0;
         this.winner = '';
-        this.room = 0;
+        this.ready = 0;
     }
 
     addPlayer(player: Player): void{
