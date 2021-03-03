@@ -13,8 +13,7 @@ import Tests from './Tests';
 import { io, Socket } from "socket.io-client";
 
 import { EXanswer, EXquestion, EXtests } from '../testdata.js';
-// import executeCode from './execute';
-import transpile from './transpile';
+import executeCode from './execute';
 
 const App = () => {
 
@@ -98,9 +97,7 @@ const App = () => {
     }, [playerCode]);
 
     const evaluateCode = () => {
-        const [output, error] = transpile(playerCode);
-        const code: string = error.show ? error.errorMessage : new Function(output);
-
+        const code = executeCode(playerCode);
         writeConsole(code);
     }
 

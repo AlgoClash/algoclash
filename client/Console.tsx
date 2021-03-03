@@ -15,7 +15,6 @@ const Console = (props) => {
     return (
         <div className='console container'>
             <div className='header'>Console</div>
-
             <CodeMirror options={options} value={props.value} />
         </div>
     );
