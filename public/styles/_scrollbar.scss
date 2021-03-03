@@ -9,6 +9,6 @@
 }
   
 ::-webkit-scrollbar-thumb {
-    background: $trim;
+    background: var(--trim);
     z-index: 50;
 }

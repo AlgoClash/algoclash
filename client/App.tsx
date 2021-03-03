@@ -41,7 +41,7 @@ const App = () => {
     const [modalTitle, setModalTitle] = useState<String>('');
     const [modalContent, setModalContent] = useState<any>(null);
 
-    const [theme, setTheme] = useState<String>('dark');
+    const [theme, setTheme] = useState<String>('');
 
     useEffect(() => {
 
@@ -107,10 +107,14 @@ const App = () => {
         toggleModal(true);
     }
 
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, [theme]);
+
     return (
         <>
 
-            <Navbar createModal={createModal} room={room} createRoom={createRoom} joinRoom={joinRoom} />
+            <Navbar createModal={createModal} room={room} createRoom={createRoom} joinRoom={joinRoom} theme={theme} setTheme={setTheme} />
             {modal ? <Modal title={modalTitle} contents={modalContent} /> : ''}
             <div id='preventclick' onClick={() => {if (room !== '') toggleModal(false)}} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: modal ? 50 : -10, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
 
