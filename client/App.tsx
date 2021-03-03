@@ -100,7 +100,8 @@ const App = () => {
     }, [playerCode]);
 
     const evaluateCode = () => {
-        writeConsole(playerConsole + ('\n').repeat(2) + executeCode(playerCode));
+        const { code, log } = executeCode(playerCode);
+        writeConsole(playerConsole + '\n' + log);
     }
 
     const createModal = (title, content) => {

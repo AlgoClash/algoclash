@@ -10,7 +10,6 @@ const Navbar = (props) => {
     }
 
     const toggleTheme = () => {
-
         if (props.theme === 'dark')
             props.setTheme('light');
         if (props.theme === 'light')

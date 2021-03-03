@@ -30,7 +30,6 @@ const Submit = (props) => {
                 </h1>
                 <button id='testbtn' onClick={handleStart} >Start Counter</button>
                 <button id='testbtn' onClick={props.startTimer} >Start Counter</button>
-
             </div>
 
             <div id='scoreboard'>
