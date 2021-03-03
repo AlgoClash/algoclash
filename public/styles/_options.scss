@@ -8,9 +8,9 @@
 
     h1{
         font-family: monospace;
-        color: $text;
-        border: 1px solid $trim;
-        background-color: $container;
+        color: var(--text);
+        border: 1px solid var(--trim);
+        background-color: var(--container);
         padding: .25rem .5rem;
         user-select: none;
         margin: .25rem;
@@ -25,7 +25,7 @@
     h2{
         font-family: monospace;
         font-size: 32px;
-        color: $btnhover;
+        color: var(--btnhover);
         margin: 0;
     }
 
@@ -33,7 +33,7 @@
         font-family: monospace;
         font-size: 12px;
         line-height: 0;
-        color: $text;
+        color: var(--text);
         margin: 0;
     }
 

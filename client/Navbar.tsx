@@ -23,7 +23,6 @@ const Navbar = (props) => {
         <div id='navbar'>
             <a href="/">Algo Clash</a>
 
-
             <h1>Room: {props.room}</h1>
 
             <div>

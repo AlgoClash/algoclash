@@ -42,7 +42,7 @@ const App = () => {
     const [modalTitle, setModalTitle] = useState<String>('');
     const [modalContent, setModalContent] = useState<any>(null);
 
-    const [theme, setTheme] = useState<String>('');
+    const [theme, setTheme] = useState<string>('');
 
     const [ready, setTimer] = useState<Boolean>(false);
 
@@ -92,7 +92,6 @@ const App = () => {
         setRoom(roomID);
         socket.current?.emit('joinRoom', {userID: id, roomID});
         toggleModal(false);
-
     }
 
     useEffect(() => {
@@ -157,7 +156,7 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-                    <Submit score={score} round={round} totalRounds={totalRounds} startTimer={startTimer}/>
+                    <Submit score={score} round={round} totalRounds={totalRounds} startTimer={startTimer} evaluateCode={evaluateCode} />
                 </div>
 
             </div>
