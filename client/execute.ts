@@ -1,12 +1,12 @@
 import transpile from './transpile';
 
-const executeCode = (code) => {
+const executeCode = (code): string => {
   try {
     const [output, error] = transpile(code);
 
     let consolelog = '';
 
-    const override = (log) => {
+    const override = (log): string => {
       let text = String(log);
       let parsed;
   
@@ -16,12 +16,12 @@ const executeCode = (code) => {
         parsed = text;
       }
       
-      consolelog = parsed;
+      return consolelog = parsed;
 
     };
 
     (function () {
-      const originalError = console.error;
+      const originalError = <any>console.error;
       const originalLog = console.log;
   
       console.error = function (error) {
