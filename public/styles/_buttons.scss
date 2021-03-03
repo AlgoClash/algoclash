@@ -8,6 +8,13 @@ button{
 
     &:hover{
         cursor: pointer;
+        background-color: $btnhover;
+    }
+
+    &:disabled{
+        cursor: not-allowed;
+        background-color: gray;
+        border: 1px solid gray;
     }
 }
 

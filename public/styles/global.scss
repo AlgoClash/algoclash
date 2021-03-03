@@ -23,6 +23,17 @@ h1{
     font-weight: 100;
 }
 
+input{
+    color: $text;
+    background-color: $container;
+
+    width: 16rem;
+    height: 2rem;
+
+    border: 1px solid $btnhover;
+    outline: none;
+}
+
 #appcontainer{
     display: grid;
     grid-template-columns: 2fr 1fr 1fr .5fr;
