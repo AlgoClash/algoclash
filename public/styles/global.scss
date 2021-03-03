@@ -5,7 +5,9 @@
 @import 'question';
 @import 'tests';
 @import 'console';
+
 @import 'options';
+
 @import 'navbar';
 @import 'modal';
 @import 'scrollbar';
@@ -13,6 +15,12 @@
 body{
     margin: 3em;
     background-color: $bg;
+}
+
+h1{
+    color: $text;
+    font-family: monospace;
+    font-weight: 100;
 }
 
 #appcontainer{

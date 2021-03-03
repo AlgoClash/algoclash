@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './Navbar';
 import Modal from './Modal';
 
+import CreateRoom from './CreateRoom';
+
 import Editor from './Editor';
 import Console from './Console';
 import Question from './Question';
@@ -36,7 +38,7 @@ const App = () => {
     const [playerConsole, writeConsole] = useState<any>('');
 
     const [collapsed, collapseChallenger] = useState<Boolean>(false);
-    const [modal, toggleModal] = useState<Boolean>(false);
+    const [modal, toggleModal] = useState<Boolean>(true);
     const [modalTitle, setModalTitle] = useState<String>('');
     const [modalContent, setModalContent] = useState<any>(null);
 
@@ -61,24 +63,35 @@ const App = () => {
 
         if (id === '') return;
 
-        socket.current?.on('playerJoined', data => {
-            if (data.totalPlayers.length > 1) setChallengerID(data.totalPlayers.filter(playerID => playerID !== id)[0]);
+        createModal('Enter a Room', <CreateRoom createRoom={createRoom} joinRoom={joinRoom} />)
+
+        socket.current?.on('playerJoined', ({totalPlayers}) => {
+            if (totalPlayers.length > 1) setChallengerID(totalPlayers.filter(playerID => playerID !== id)[0]);
+            console.log(totalPlayers);
         });
 
-        socket.current?.on('writeCode', data => {
-            if (data.userID === id) return;
-            setChallengerCode(data.code);
+        socket.current?.on('writeCode', ({userID, code}) => {
+            if (userID === id) return;
+            setChallengerCode(code);
         });
+
+        socket.current?.on('createSuccess', ({roomID}) => {
+            joinRoom(roomID);
+        })
 
     }, [id]);
 
-    const createRoom = (roomID) => {
-        socket.current?.emit('createRoom', {roomID});
+    const createRoom = (roomID: string): void => {
         setRoom(roomID);
+        socket.current?.emit('createRoom', {roomID});
+        toggleModal(false);
     }
 
-    const joinRoom = () => {
-        socket.current?.emit('joinRoom', {userID: id, roomID: room});
+    const joinRoom = (roomID: string): void => {
+        setRoom(roomID);
+        socket.current?.emit('joinRoom', {userID: id, roomID});
+        toggleModal(false);
+
     }
 
     useEffect(() => {
@@ -92,17 +105,6 @@ const App = () => {
         if (output === undefined) output = 'undefined';
         writeConsole(output);
 
-        // try {
-        //     console.log(playerCode);
-        //     writeConsole(eval(playerCode).toString()); 
-        // } catch (e) {
-        //     if (e instanceof SyntaxError) {
-        //         writeConsole((e.message).toString());
-        //     } else {
-        //         throw e;
-        //     }
-        // }
-
     }
 
     const createModal = (title, content) => {
@@ -115,9 +117,10 @@ const App = () => {
     return (
         <>
 
-            <Navbar createModal={createModal} createRoom={createRoom} joinRoom={joinRoom} />
+
+            <Navbar createModal={createModal} room={room} createRoom={createRoom} joinRoom={joinRoom} />
             {modal ? <Modal title={modalTitle} contents={modalContent} /> : ''}
-            <div id='preventclick' onClick={() => toggleModal(false)} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: modal ? 50 : -10, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
+            <div id='preventclick' onClick={() => {if (room !== '') toggleModal(false)}} style={{width: '100vw', height: '100vh', position: 'fixed', zIndex: modal ? 50 : -10, backgroundColor: `${modal ? 'rgba(0,0,0,.3)' : 'transparent'}`}} />
 
             <div id='appcontainer' style={{filter: `${modal ? 'blur(5px)' : ''}`}}>
 
@@ -148,15 +151,4 @@ const App = () => {
 }
 
 export default App;
-
-                    /* <h1 id='timer' >00:30.999</h1>
-
-                    <div id='scoreboard'>
-                        <h2 id='score' >{score}</h2>
-                        <h3 id='round' >{round} of {totalRounds}</h3>
-                    </div>
-
-                    <div id='btncontainer' >
-                        <button id='testbtn' onClick={evaluateCode} >TEST</button>
-                        <button>SUBMIT</button>
-                     </div> */
+       
