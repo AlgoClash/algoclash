@@ -53,9 +53,14 @@ const Login = (props) => {
             <h1 style={{fontFamily: 'monospace', fontSize: '16px', color: 'white'}} >Username</h1>
             <input type='text' onChange={usernameInput}/>
 
+            <br/>
+
             <h1 style={{fontFamily: 'monospace', fontSize: '16px', color: 'white'}}>Password</h1>
             <input type='text' onChange={passwordInput} />
+            <br/>
             <button onClick={submitButton} type="button">Confirm</button>
+
+            <br/><br/>
 
             <GoogleLogin 
                 clientId={googleClientID}
