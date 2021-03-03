@@ -13,7 +13,7 @@ const Question = (props) => {
     };
 
     return (
-        <div id='question container'>
+        <div id='question' className='container'>
             <div className='header'>Question</div>
 
             <CodeMirror options={options} value={props.value} />

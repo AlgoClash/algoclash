@@ -1,4 +1,4 @@
-@import 'palette';
+// @import 'palette';
 @import 'buttons';
 @import 'containers';
 @import 'editor';
@@ -12,25 +12,67 @@
 @import 'modal';
 @import 'scrollbar';
 
+html{
+    --bg: #161b1f;
+    --header: #262b2f;
+    --trim: #4b657e;
+    --container: #08110e;
+    --gutter: #151a1e;
+    --container-secondary: #262b2f;
+    --navbar: #161b1f;
+    --text: #cacfd3;
+
+    --btn: #5f97dc;
+    --btnhover: #8cb3e5;
+}
+
+html[data-theme='dark'] {
+    --bg: #303133;
+    --header: #262729;
+    --trim: #424242;
+    --container: #151515;
+    --gutter: #202020;
+    --container-secondary: #262626;
+    --navbar: #303133;
+    --text: #eaeaea;
+
+    --btn: #7d4e57ff;
+    --btnhover: #d66853ff;
+}
+
+html[data-theme='light']{
+    --bg: #FCFCFC;
+    --header: #EBEBEB;
+    --trim: #EBEBEB;
+    --container: white;
+    --gutter: #f7f7f7;
+    --container-secondary: white;
+    --navbar: white;
+    --text: #333333;
+
+    --btn: #0565d3;
+    --btnhover: #0077ff;
+}
+
 body{
     margin: 3em;
-    background-color: $bg;
+    background-color: var(--bg);
 }
 
 h1{
-    color: $text;
+    color: var(--text);
     font-family: monospace;
     font-weight: 100;
 }
 
 input{
-    color: $text;
-    background-color: $container;
+    color: var(--text);
+    background-color: var(--container);
 
     width: 16rem;
     height: 2rem;
 
-    border: 1px solid $btnhover;
+    border: 1px solid var(--btnhover);
     outline: none;
 }
 
@@ -84,7 +126,7 @@ input{
     grid-row: 4;
 
     margin-bottom: -2rem;
-    background-color: $header;
+    background-color: var(--header);
 }
 
 #preventclick{
