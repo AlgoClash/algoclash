@@ -43,7 +43,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
-            plugins: [
+            plugins: ['@babel/plugin-transform-runtime',
               isDevelopment && require.resolve('react-refresh/babel'),
             ].filter(Boolean),
           },

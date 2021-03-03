@@ -1,24 +1,10 @@
 @import 'palette';
-
-html[data-theme="dark"]{
-    $bg: #303133;
-    $header: #262729;
-    $trim: #424242;
-    $container: #151515;
-    $gutter: #202020;
-    $container-secondary: #262626;
-    $navbar: #424242;
-    $text: #eaeaea;
-    
-    $btn: #7d4e57ff;
-    $btnhover: #d66853ff;
-}
-
 @import 'buttons';
 @import 'containers';
 @import 'editor';
 @import 'question';
 @import 'tests';
+@import 'console';
 @import 'navbar';
 @import 'modal';
 @import 'scrollbar';

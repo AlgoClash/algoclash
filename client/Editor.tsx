@@ -7,6 +7,7 @@ const Editor = (props) => {
     const options = {
         lineNumbers: true,
         lineWrapping: true,
+        lint: true,
         mode: 'javascript',
         theme: `${props.theme === 'light' ? 'default' : 'lesser-dark'}`,
     };
@@ -16,7 +17,7 @@ const Editor = (props) => {
     }
 
     return (
-        <div className='ide' >
+        <div className='ide container' >
 
             <div className='header'>
                 {props.username}

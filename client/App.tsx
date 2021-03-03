@@ -11,6 +11,7 @@ import Tests from './Tests';
 import { io, Socket } from "socket.io-client";
 
 import { EXanswer, EXquestion, EXtests } from '../testdata.js';
+import executeCode from './execute';
 
 const App = () => {
 
@@ -31,7 +32,7 @@ const App = () => {
     const [question, setQuestion] = useState<string>(``);
     const [tests, setTests] = useState<string>('');
 
-    const [playerConsole, writeConsole] = useState<string>('');
+    const [playerConsole, writeConsole] = useState<any>('');
 
     const [collapsed, collapseChallenger] = useState<Boolean>(false);
     const [modal, toggleModal] = useState<Boolean>(false);
@@ -64,13 +65,10 @@ const App = () => {
         });
 
         socket.current?.on('writeCode', data => {
-
-            console.log(data.userID, id, data.userID === id);
-
-            if (data.userID === id)
-                return;
+            if (data.userID === id) return;
             setChallengerCode(data.code);
         });
+
     }, [id]);
 
     const createRoom = (roomID) => {
@@ -88,16 +86,22 @@ const App = () => {
     }, [playerCode]);
 
     const evaluateCode = () => {
-        try {
-            console.log(playerCode);
-            writeConsole(eval(playerCode).toString()); 
-        } catch (e) {
-            if (e instanceof SyntaxError) {
-                writeConsole((e.message).toString());
-            } else {
-                throw e;
-            }
-        }
+
+        let output = executeCode(playerCode);
+        if (output === undefined) output = 'undefined';
+        writeConsole(output);
+
+        // try {
+        //     console.log(playerCode);
+        //     writeConsole(eval(playerCode).toString()); 
+        // } catch (e) {
+        //     if (e instanceof SyntaxError) {
+        //         writeConsole((e.message).toString());
+        //     } else {
+        //         throw e;
+        //     }
+        // }
+
     }
 
     const createModal = (title, content) => {

@@ -19,3 +19,7 @@
 .CodeMirror {
     height: 100% !important;
 }
+
+.CodeMirror-wrap pre {
+    word-break: break-word !important;
+}
