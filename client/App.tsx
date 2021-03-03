@@ -21,14 +21,14 @@ const App = () => {
     const [totalRounds, setTotalRounds] = useState<Number>(3);
     const [round, nextRound] = useState<number>(1);
     const [wins, addWin] = useState<number>(0);
-    const [score, calculateScore] = useState<any>(100 * (wins / round) + '%');
+    const [score, calculateScore] = useState<string>('0%'); //100 * (wins / round) +'%'
 
     const [playerCode, setPlayerCode] = useState<string>('');
     const [challengerCode, setChallengerCode] = useState<string>('const test = (arg) => { console.log("hello!"); }');
 
     const [js, writeJS] = useState<string>('');
 
-    const [question, setQuestion] = useState<string>(``);
+    const [question, setQuestion] = useState<string>('');
     const [tests, setTests] = useState<string>('');
 
     const [playerConsole, writeConsole] = useState<string>('');
