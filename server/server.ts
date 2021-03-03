@@ -79,6 +79,11 @@ io.on('connection', (socket) => {
     console.log(`user ${socket.id} disconnected`);
   });
 
+  socket.on('ready', (data) => {
+    console.log(data);
+    socket.emit('ready2', {key: "returning the response"})
+  });
+
 });
 
 // global error handler --->

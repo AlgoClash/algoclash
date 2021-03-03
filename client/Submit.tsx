@@ -4,7 +4,11 @@ const Submit = (props) => {
 
     return (
         <div id='options'>
-            <h1 id='timer' >00:30.999</h1>
+            <div>
+                <h1 id='timer' >00:30.999</h1>
+                <button id='testbtn' onClick={props.startTimer} >Start Counter</button>
+
+            </div>
 
             <div id='scoreboard'>
                 <h2 id='score' >{props.score}</h2>
