@@ -2,11 +2,12 @@
   "name": "algoclash",
   "version": "1.0.0",
   "description": "",
-  "main": "./client/index.tsx",
+  "main": "tsCompiled/server/server.js",
   "scripts": {
     "test": "jest --verbose",
-    "start": "concurrently \"npm run build -- -w\" \"cross-env NODE_ENV=production node tsCompiled/server/server.js\"",
-    "build": "tsc -p ./",
+    "start": "concurrently \"npm run compile -- -w\" \"cross-env NODE_ENV=production node tsCompiled/server/server.js\"",
+    "build": "cross-env NODE_ENV=production webpack",
+    "compile": "tsc -p ./",
     "dev": "concurrently \"run-p tsc-dev webpack-dev\" \"cross-env NODE_ENV=development nodemon tsCompiled/server/server.js\"",
     "tsc-dev": "tsc --watch",
     "webpack-dev": "cross-env NODE_ENV=development webpack serve --open"
