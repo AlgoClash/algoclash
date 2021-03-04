@@ -39,7 +39,7 @@ const Submit = (props) => {
 
             <div id='btncontainer' >
                 <button id='testbtn' onClick={props.evaluateCode} >TEST</button>
-                <button>SUBMIT</button>
+                <button onClick={props.submitCode}>SUBMIT</button>
             </div>
         </div>
     )
