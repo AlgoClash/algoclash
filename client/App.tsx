@@ -70,24 +70,31 @@ const App = () => {
 
     // request new algo from db onmount & when a new completed algo is added to compAlgos
     // not sure where this goes, inside socket server?
+//     useEffect(() => {
+//       // pass compAlgos array to get non-completed algo
+//       fetch('/algo', {
+//         method: 'POST', 
+//         headers: { 'Content-Type': 'Application/JSON' },
+//         body: JSON.stringify(compAlgos)
+//       })
+//       .then(res => res.json())
+//       .then(algo => {
+//         console.log('algo returned from fetch:', algo);
+//         // sets returned algo question
+//         setQuestion(algo.question);
+//         // sets returned algo tests
+//         setTests(algo.tests);
+//         // store current algo name
+//         setCurAlgo(algo.algoName);
+//       })
+//   }, [compAlgos]);
+
     useEffect(() => {
-      // pass compAlgos array to get non-completed algo
-      fetch('/algo', {
-        method: 'POST', 
-        headers: { 'Content-Type': 'Application/JSON' },
-        body: JSON.stringify(compAlgos)
-      })
-      .then(res => res.json())
-      .then(algo => {
-        console.log('algo returned from fetch:', algo);
-        // sets returned algo question
-        setQuestion(algo.question);
-        // sets returned algo tests
-        setTests(algo.tests);
-        // store current algo name
-        setCurAlgo(algo.algoName);
-      })
-  }, [compAlgos]);
+        console.log('fetching data')
+        fetch('/algo/getAllQuestions')
+        .then(response=>response.json())
+        .then(data => console.log('LIST OF QUESTIONS ----------->', data))
+    })
 
     useEffect(() => {
         // writeJS(playerCode);
@@ -123,7 +130,7 @@ const App = () => {
 
     const createRoom = (roomID: string): void => {
         setRoom(roomID);
-        socket.current?.emit('createRoom', {roomID});
+        socket.current?.emit('createRoom', {roomID}, [question]);
         toggleModal(false);
     }
 
