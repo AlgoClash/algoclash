@@ -15,6 +15,28 @@ const Tests = (props) => {
     const [checks, toggleChecks] = useState<Boolean>(false);
     const [code, testCode] = useState<string>('');
 
+  // checking the testResults array to see if any tests failed
+  const checkResults = (testResults) => {
+    console.log('Checking test results:', testResults);
+    if (testResults.includes('fail')) console.log('Did not pass all tests'); // if fail do this
+    else console.log('Passed all tests'); // if pass do this
+  };
+
+  // listening for messages from the iframe
+  if (typeof window.addEventListener != 'undefined') {
+    window.addEventListener('message', function(e) {
+        if (e.data[0] === 'result') {
+          checkResults(e.data[1]);
+        }
+    }, false);
+} else if (typeof window.attachEvent != 'undefined') { // this part is for IE8 -- from the stackoverflow I found it on
+    window.attachEvent('onmessage', function(e) {
+        if (e.data[0] === 'result') {
+          checkResults(e.data[1]);
+        }
+    });
+  }
+
     useEffect(() => {
 
         if (!props.test) return;
@@ -58,7 +80,22 @@ const Tests = (props) => {
       });</script>
 
     <script class="mocha-exec">
-      mocha.run();
+      var result = [];
+      mocha.run()
+        .on('pass', function(test) {
+          result.push('pass');
+          console.log('Test passed');
+          console.log(test);
+        })
+        .on('fail', function(test, err) {
+          result.push('fail');
+          console.log('Test failed');
+          console.log(test);
+        })
+        .on('end', function() {
+          console.log('inside end test listener');
+          window.parent.postMessage(['result', result], '*');
+        });
     </script>
 
     <style>html{background-color:white;}</style>
