@@ -49,6 +49,7 @@ const App = () => {
     const [modalContent, setModalContent] = useState<any>(null);
 
     const [theme, setTheme] = useState<string>('');
+    const [timer, setTimer] = useState<number>(3);
 
     // compAlgos array holds completed algo names - need to invoke addAlgo(...compAlgos, curAlgo) on successful algo completion
     const [compAlgos, setCompAlgos] = useState<string[]>([]);
@@ -180,6 +181,28 @@ const App = () => {
         document.documentElement.setAttribute('data-theme', theme);
     }, [theme]);
 
+    useEffect(() => {
+
+        if (game === 2) {
+
+            let newTime = timer - 1;
+            
+            setTimeout(() => setTimer(newTime), 1000);
+         
+        }
+    }, [game]);
+
+    useEffect(() => {
+
+        if (timer === 0) {
+            round < totalRounds ? setGameState(gameState.review) : setGameState(gameState.end);
+
+        } else {
+            let newTime = timer - 1;
+            setTimeout(() => setTimer(newTime), 1000);
+        }
+    },[timer]);
+
     return (
         <>
 
@@ -208,11 +231,7 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-<<<<<<< HEAD
-                    <Submit score={score} round={round} totalRounds={totalRounds} time={time} startTimer={startTimer}/>
-=======
-                    <Options score={score} round={round} totalRounds={totalRounds} game={game} setGameState={setGameState} evaluateCode={evaluateCode} submitCode={submitCode} />
->>>>>>> 9c12491f1a1ed443a9d0461743aebd5148983f90
+                    <Options score={score} round={round} totalRounds={totalRounds} game={game} timer={timer} setGameState={setGameState} evaluateCode={evaluateCode} submitCode={submitCode} />
                 </div>
 
             </div>
