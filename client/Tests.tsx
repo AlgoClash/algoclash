@@ -64,14 +64,7 @@ const Tests = (props) => {
 
     <script>${code}</script>
     
-    <script>describe('clone', function() {
-        it('should return shallow copy of object', function() {
-          var users = [{ 'user': 'barney' },{ 'user': 'fred' }];
-          var shallowClone = clone(users);
-          expect(shallowClone[0].user).to.equal(users[0].user);
-          expect(shallowClone[0]).to.equal(users[0]);
-        });
-      });</script>
+    <script>${props.value}</script>
 
     <script class="mocha-exec">
       var result = [];

@@ -150,10 +150,14 @@ const App = () => {
         if ((game === gameState.lobby && log === 'start') || (game === gameState.review && log === 'next')) socket.current?.emit('readyup', {roomID: room});
     }
 
-    const submitCode = () => {
+    const endRound = () => {
         round < totalRounds ? setGameState(gameState.review) : setGameState(gameState.end);
         setTimer(startTime);
+    }
+
+    const submitCode = () => {
         addWin(wins + 1);
+        endRound();
     }
 
     const clearEditors = () => {
@@ -177,10 +181,8 @@ const App = () => {
 
         if (game !== 2) return;
 
-        if (timer === 0) {
-            round < totalRounds ? setGameState(gameState.review) : setGameState(gameState.end);
-            setTimer(startTime);
-        } else setTimeout(() => setTimer(timer - 1), 1000);
+        if (timer === 0) endRound();
+        else setTimeout(() => setTimer(timer - 1), 1000);
 
     },[timer]);
 
