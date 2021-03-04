@@ -12,4 +12,8 @@ router.post('/admin', algoController.addAlgo, (req, res) => {
 });
 // can add DELETE handler to /algo/admin if we want to add delete functionality
 
+router.get('/getAllQuestions', algoController.getAll, (req, res) => {
+  return res.status(200).json(res.locals.allAlgos);
+})
+
 module.exports = router;
