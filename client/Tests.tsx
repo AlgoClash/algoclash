@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import CodeMirror from '@skidding/react-codemirror';
 
@@ -60,8 +60,6 @@ const Tests = (props) => {
     <script class="mocha-exec">
       mocha.run();
     </script>
-
-    <style>html{background-color:white;}</style>
 
   </body>
 </html>`;
