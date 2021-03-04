@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest --verbose",
     "start": "concurrently \"npm run compile -- -w\" \"cross-env NODE_ENV=production node tsCompiled/server/server.js\"",
+    "postinstall": "tsc && mv -i -v public dist/ && rm -v -rf src",
     "build": "cross-env NODE_ENV=production webpack",
     "compile": "tsc -p ./",
     "dev": "concurrently \"run-p tsc-dev webpack-dev\" \"cross-env NODE_ENV=development nodemon tsCompiled/server/server.js\"",
