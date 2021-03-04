@@ -1,36 +1,32 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Countdown, {zeroPad} from 'react-countdown';
 
 const Submit = (props) => {
-    // https://stackoverflow.com/questions/59130667/how-to-call-start-and-pause-functions-from-the-react-countdown-now-library#59132405
-    const clockRef = useRef();
-    const handleStart = () => clockRef.current.start();
 
-    const renderer = ({ minutes, seconds, completed, api}) => {
-        console.log(api)
-        if (completed) {
-          // Render a completed state
-          return <span>Times Up</span>;
-        } else {
-          // Render a countdown
-          return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
-        }
-      };
+    const clockRef: any = useRef<Countdown>();
+
+    const handleStart = (): void => clockRef.current?.start();
+    const handleStop = (): void => clockRef.current?.stop();
+    const renderer: any = ({ minutes, seconds, completed, _}) => completed ? <span>Times Up</span> : <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
+
+    useEffect(() => {
+
+    }, []);
 
     return (
         <div id='options'>
-            <div>
-                <h1>
+            <>
+                <div id='countdown'>
                     <Countdown 
-                        date={Date.now() + (.1 * 60 * 1000)}
+                        date={Date.now() + (600000)}
                         autoStart={false}
                         renderer={renderer}
                         ref={clockRef}
                     />
-                </h1>
-                <button id='testbtn' onClick={handleStart} >Start Counter</button>
-                <button id='testbtn' onClick={props.startTimer} >Start Counter</button>
-            </div>
+                </div>
+
+                {/* <button id='testbtn' onClick={handleStart} >Start Counter</button> */}
+            </>
 
             <div id='scoreboard'>
                 <h2 id='score' >{props.score}</h2>
@@ -42,9 +38,7 @@ const Submit = (props) => {
                 <button>SUBMIT</button>
             </div>
         </div>
-    )
+    );
 }
 
 export default Submit;
-
-//<h1 id='timer' >{props.time}</h1>

@@ -25,6 +25,10 @@ class Room {
         if (this.players.length <= 0) return;
         this.players[0].id === userID ? this.players.shift() : this.players.pop();
     }
+
+    readyup(): number{
+        return ++this.ready;
+    }
     
     nextQuestion(): void{
         this.answered++;

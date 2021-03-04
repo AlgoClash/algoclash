@@ -70,6 +70,12 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('readyup', ({roomID}) => {
+    const targetRoom = rooms.findIndex(room => room.id === roomID);
+    const ready = rooms[targetRoom].readyup();
+    socket.emit('readySuccess', {ready, roomSize: rooms[targetRoom].players.length});
+  });
+
   socket.on('keyDown', ({roomID, userID, code}) => {
     const targetRoom = rooms.findIndex(room => room.id === roomID);
     io.sockets.to(rooms[targetRoom].id).emit('writeCode', {userID, code});

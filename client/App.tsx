@@ -22,20 +22,28 @@ const App = () => {
     const [challengerid, setChallengerID] = useState<string>('Waiting for partner...');
     const socket = useRef<Socket>();
     const [room, setRoom] = useState<string>('');
+
+    enum gameState {
+        lobby,
+        ready,
+        play,
+        review,
+        end
+    }
+
+    const [game, setGameState] = useState<gameState>(gameState.lobby);
     
     const [time, updateTime] = useState<Number>(600);
     const [totalRounds, setTotalRounds] = useState<Number>(3);
     const [round, nextRound] = useState<number>(1);
     const [wins, addWin] = useState<number>(0);
-    const [score, calculateScore] = useState<string>('0%'); //100 * (wins / round) +'%'
+    const [score, calculateScore] = useState<string>(100 * (wins / round) +'%');
 
     const [playerCode, setPlayerCode] = useState<string>('');
-    const [challengerCode, setChallengerCode] = useState<string>('const test = (arg) => { console.log("hello!"); }');
-
+    const [challengerCode, setChallengerCode] = useState<string>('');
+    const [playerConsole, writeConsole] = useState<any>('console.log "start" to begin the game...');
     const [question, setQuestion] = useState<string>(``);
     const [tests, setTests] = useState<string>('');
-
-    const [playerConsole, writeConsole] = useState<any>('');
 
     const [collapsed, collapseChallenger] = useState<Boolean>(false);
     const [modal, toggleModal] = useState<Boolean>(true);
@@ -44,8 +52,6 @@ const App = () => {
 
     const [theme, setTheme] = useState<string>('');
 
-    const [ready, setTimer] = useState<Boolean>(false);
-
     useEffect(() => {
 
         socket.current = io();
@@ -53,7 +59,7 @@ const App = () => {
         socket.current.on('connect', () => socket.current?.emit('connectClient'));
         socket.current.on('connectSuccess', data => setID(data.socketID));
 
-        setPlayerCode(EXanswer);
+        // setPlayerCode(EXanswer);
         setQuestion(EXquestion);
         setTests(EXtests);
 
@@ -80,6 +86,10 @@ const App = () => {
             joinRoom(roomID);
         })
 
+        socket.current?.on('readySuccess', data => {
+            console.log(data);
+        });
+
     }, [id]);
 
     const createRoom = (roomID: string): void => {
@@ -102,6 +112,8 @@ const App = () => {
     const evaluateCode = () => {
         const { code, log } = executeCode(playerCode);
         writeConsole(playerConsole + '\n' + log);
+
+        if (game === gameState.lobby && log === 'start') socket.current?.emit('readyup', {roomID: room, userID: id});
     }
 
     const createModal = (title, content) => {
@@ -114,25 +126,6 @@ const App = () => {
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
     }, [theme]);
-      
-    const startTimer = () => {
-        console.log('challenger id', challengerid)
-        if (challengerid === 'Waiting for partner...') {
-            console.log('timer can start')
-        } else {
-            console.log('waiting on other player')
-        }
-        if (!ready) setTimer(true)
-    }
-
-    useEffect(() => {
-        if (ready === false) return;
-        console.log('useEffect for ready working')
-        socket.current?.emit('ready', {key: 'ready button clicked'});
-        socket.current?.on('ready2', (data) => {
-            console.log('ready2 response triggered')
-        })
-    }, [ready]);
 
     return (
         <>
@@ -163,7 +156,7 @@ const App = () => {
 
                 <div id='optionscontainer'>
 
-                    <Submit score={score} round={round} totalRounds={totalRounds} time={time} startTimer={startTimer}/>
+                    <Submit score={score} round={round} totalRounds={totalRounds} time={time} evaluateCode={evaluateCode} />
 
                 </div>
 

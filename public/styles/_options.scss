@@ -6,14 +6,19 @@
 
     height: 100%;
 
-    h1{
+    #countdown{
         font-family: monospace;
+        font-size: 24px;
         color: var(--text);
         border: 1px solid var(--trim);
         background-color: var(--container);
         padding: .25rem .5rem;
         user-select: none;
         margin: .25rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     #scoreboard{
