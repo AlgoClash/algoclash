@@ -1,3 +1,6 @@
+.container{
+}
+
 .header{
     position: relative;
     display: flex;
@@ -6,9 +9,9 @@
     text-align: center;
     font-family: monospace;
     font-size: 16px;
-    color: $text;
-    background-color: $header;
-    border-bottom: 2px solid $trim;
+    color: var(--text);
+    background-color: var(--header);
+    border-bottom: 2px solid var(--trim);
     border-radius: 4px 4px 0px 0px;
     padding: .5rem;
     max-height: 1rem;
@@ -18,4 +21,8 @@
 
 .CodeMirror {
     height: 100% !important;
+}
+
+.CodeMirror-wrap pre {
+    word-break: break-word !important;
 }

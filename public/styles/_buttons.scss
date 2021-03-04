@@ -1,37 +1,45 @@
 button{
     outline: none;
-    border: 1px solid $btn;
+    border: 1px solid var(--btn);
     border-radius: 4px;
     padding: .25em .5em;
     margin: .25em;
+    background-color: var(--btn);
 
     &:hover{
         cursor: pointer;
+        background-color: var(--btnhover);
+    }
+
+    &:disabled{
+        cursor: not-allowed;
+        background-color: gray;
+        border: 1px solid gray;
     }
 }
 
 #testbtn{
-    color: $btn;
+    color: var(--btn);
     background-color: transparent;
 
     &:hover{
-        background-color: $container;
-        color: $btnhover;
+        background-color: --container;
+        color: var(--btnhover);
     }
 }
 
 #submitbtn{
-    color: $container;
-    background-color: $btn;
+    color: var(--container);
+    background-color: var(--btn);
 
     &:hover{
-        background-color: $btnhover;
+        background-color: var(--btnhover);
     }
 }
 
 #collapse{
     background-color: transparent;
-    color: $text;
+    color: var(--text);
     outline: none;
     border: none;
 }

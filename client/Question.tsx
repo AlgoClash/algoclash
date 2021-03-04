@@ -7,12 +7,13 @@ const Question = (props) => {
     const options = {
         lineNumbers: false,
         lineWrapping: true,
-        mode: 'javascript',
+        readOnly: true,
+        mode: 'language',
         theme: `${props.theme === 'light' ? 'default' : 'lesser-dark'}`,
     };
 
     return (
-        <div id='question'>
+        <div id='question' className='container'>
             <div className='header'>Question</div>
 
             <CodeMirror options={options} value={props.value} />

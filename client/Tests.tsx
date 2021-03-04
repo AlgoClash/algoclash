@@ -14,20 +14,14 @@ const Tests = (props) => {
 
     const [checks, toggleChecks] = useState<Boolean>(false);
 
-    const srcDoc = `
-    <html>
-        <script>${props.js}</script>
-    </html>`;
-
     return (
-        <div id='test'>
-            <div className='header'><a onClick={() => toggleChecks(false)} style={{userSelect: 'none', cursor: 'pointer', opacity: `${checks ? '.6' : '1'}`}} >Tests</a> <a onClick={() => toggleChecks(true)} style={{userSelect: 'none', cursor: 'pointer', opacity: `${checks ? '1' : '.6'}`}} >/Checks</a></div>
+        <div id='test' className='container'>
+            <div className='header'><a onClick={() => toggleChecks(false)} style={{userSelect: 'none', cursor: 'pointer', fontSize: `${checks ? '14px' : '16px'}`, opacity: `${checks ? '.6' : '1'}`}} >Tests</a> <a onClick={() => toggleChecks(true)} style={{userSelect: 'none', cursor: 'pointer', fontSize: `${checks ? '16px' : '14px'}`, opacity: `${checks ? '1' : '.6'}`}} >/Checks</a></div>
 
             {checks ? 
                 <div id='terminal'>
                     <iframe
                     id='iframe'
-                    srcDoc={srcDoc}
                     title='output'
                     sandbox='allow-scripts'
                     frameBorder='0'

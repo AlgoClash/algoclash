@@ -43,7 +43,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
-            plugins: [
+            plugins: ['@babel/plugin-transform-runtime',
               isDevelopment && require.resolve('react-refresh/babel'),
             ].filter(Boolean),
           },
@@ -113,9 +113,13 @@ module.exports = {
       ignored: /node_modules/,
     },
     proxy: {
-      '/': 'http://localhost:3000',
+      '*': 'http://localhost:3000',
       secure: false,
-      changeOrigin: true
+      changeOrigin: true,
+      '/socket.io': {
+        target: 'http://localhost:3000',
+        ws: true
+      }
     },
   },
 };
