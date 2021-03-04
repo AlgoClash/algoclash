@@ -44,7 +44,7 @@ const Submit = memo<Props>(({score, round, game, setGameState, totalRounds, eval
             <>
                 <div id='countdown'>
                     <Countdown 
-                        date={Date.now() + (6000)}//00)}
+                        date={Date.now() + (600000 / 10)}
                         autoStart={false}
                         renderer={renderer}
                         ref={clockRef}

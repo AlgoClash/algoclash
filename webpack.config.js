@@ -8,7 +8,7 @@ module.exports = {
   devtool: 'eval-cheap-module-source-map',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '/dist'),
   },
   module: {
     rules: [
@@ -20,16 +20,6 @@ module.exports = {
           },
           {
             loader: 'css-loader', // translates CSS into CommonJS modules
-          },
-          {
-            loader: 'postcss-loader', // Run postcss actions
-            options: {
-              postcssOptions: {
-                plugins() {
-                  'autoprefixer';
-                },
-              },
-            },
           },
           {
             loader: 'sass-loader', // compiles Sass to CSS
@@ -88,7 +78,6 @@ module.exports = {
     ],
   },
   resolve: {
-    // Enable importing JS / JSX files without specifying their extension
     modules: [path.resolve(__dirname, 'node_modules')],
     extensions: [
       '.js',
@@ -102,7 +91,6 @@ module.exports = {
     ],
   },
   devServer: {
-    // contentBase: path.resolve(__dirname, '/tsCompiled/frontend'),
     contentBase: path.resolve(__dirname, '/dist/'),
     host: 'localhost',
     port: '8080',

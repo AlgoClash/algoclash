@@ -5,8 +5,8 @@
   "main": "./client/index.tsx",
   "scripts": {
     "test": "jest --verbose",
-    "start": "cross-env NODE_ENV=production webpack",
-    "build": "cross-env NODE_ENV=production node tsCompiled/server/server.js",
+    "start": "concurrently \"npm run build -- -w\" \"cross-env NODE_ENV=production node tsCompiled/server/server.js\"",
+    "build": "tsc -p ./",
     "dev": "concurrently \"run-p tsc-dev webpack-dev\" \"cross-env NODE_ENV=development nodemon tsCompiled/server/server.js\"",
     "tsc-dev": "tsc --watch",
     "webpack-dev": "cross-env NODE_ENV=development webpack serve --open"
@@ -29,6 +29,7 @@
     "codemirror": "^5.59.4",
     "cookie-parser": "^1.4.5",
     "cross-env": "^7.0.3",
+    "concurrently": "^6.0.0",
     "css-loader": "^5.1.1",
     "express": "^4.17.1",
     "html-webpack-plugin": "^5.2.0",
@@ -62,7 +63,6 @@
     "babel-core": "^6.26.3",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
-    "concurrently": "^6.0.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "enzyme-to-json": "^3.6.1",
