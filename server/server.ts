@@ -19,9 +19,9 @@ mongoose.connect( MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }
 mongoose.connection.once("open", () => console.log("connected to database"));
 
 if (process.env.NODE_ENV === 'production') {
-  app.use('/build', express.static(path.join(__dirname, '../build')));
+  app.use('/dist', express.static(path.join(__dirname, '../dist')));
   app.get('/', (_, res) => {
-    return res.status(200).sendFile(path.join(__dirname, '../index.html'));
+    return res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
   });
 };
 
@@ -29,7 +29,7 @@ app.use('/user', userRoute);
 
 app.use('/algo', algoRoute);
 
-app.get('/', (_, res) => {
+app.get('*', (_, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
 });
 /* --- SOCKET.IO --- */

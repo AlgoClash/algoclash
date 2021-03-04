@@ -35,7 +35,7 @@ const App = () => {
     const [totalRounds, setTotalRounds] = useState<number>(3);
     const [round, nextRound] = useState<number>(0);
     const [wins, addWin] = useState<number>(0);
-    const [score, calculateScore] = useState<string>(100 * (wins / round) +'%');
+    const [score, calculateScore] = useState<string>(`0%`);
 
     const [playerCode, setPlayerCode] = useState<string>('');
     const [challengerCode, setChallengerCode] = useState<string>('asgdsgags');
@@ -143,6 +143,10 @@ const App = () => {
         }
 
     }, [game]);
+
+    useEffect(() => {
+        wins === 0 ? calculateScore('0%') : calculateScore(100 * (wins / round) + '%');
+    }, [round]);
 
     const evaluateCode = () => {
         const { code, log } = executeCode(playerCode);
