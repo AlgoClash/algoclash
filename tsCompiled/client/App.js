@@ -56,6 +56,7 @@ const App = () => {
     const [playerConsole, writeConsole] = react_1.useState('console.log "start" to begin the game...');
     const [question, setQuestion] = react_1.useState(``);
     const [tests, setTests] = react_1.useState('');
+    const [test, runTest] = react_1.useState(false);
     const [collapsed, collapseChallenger] = react_1.useState(false);
     const [modal, toggleModal] = react_1.useState(true);
     const [modalTitle, setModalTitle] = react_1.useState('');
@@ -151,6 +152,7 @@ const App = () => {
         var _a;
         const { code, log } = execute_1.default(playerCode);
         writeConsole(playerConsole + '\n' + log);
+        runTest(true);
         if ((game === gameState.lobby && log === 'start') || (game === gameState.review && log === 'next'))
             (_a = socket.current) === null || _a === void 0 ? void 0 : _a.emit('readyup', { roomID: room });
     };
@@ -185,7 +187,7 @@ const App = () => {
                 react_1.default.createElement(Editor_1.default, { user: 'player', username: `${id} (You)`, lanuage: 'js', value: playerCode, onChange: setPlayerCode, collapse: collapseChallenger, collapsed: collapsed, gameState: gameState, game: game, theme: theme }),
                 collapsed ? '' : react_1.default.createElement(Editor_1.default, { user: 'challenger', username: `${challengerid} (Them)`, lanuage: 'js', value: challengerCode, gameState: gameState, game: game, onChange: setChallengerCode, theme: theme })),
             react_1.default.createElement("div", { id: 'testcontainer' },
-                react_1.default.createElement(Tests_1.default, { value: tests, theme: theme })),
+                react_1.default.createElement(Tests_1.default, { value: tests, test: test, runTest: runTest, playerCode: playerCode, theme: theme })),
             react_1.default.createElement("div", { id: 'consolecontainer' },
                 react_1.default.createElement(Console_1.default, { value: playerConsole })),
             react_1.default.createElement("div", { id: 'optionscontainer' },

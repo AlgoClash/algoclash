@@ -42,6 +42,8 @@ const App = () => {
     const [playerConsole, writeConsole] = useState<any>('console.log "start" to begin the game...');
     const [question, setQuestion] = useState<string>(``);
     const [tests, setTests] = useState<string>('');
+    
+    const [test, runTest] = useState<boolean>(false);
 
     const [collapsed, collapseChallenger] = useState<Boolean>(false);
     const [modal, toggleModal] = useState<Boolean>(true);
@@ -152,6 +154,7 @@ const App = () => {
     const evaluateCode = () => {
         const { code, log } = executeCode(playerCode);
         writeConsole(playerConsole + '\n' + log);
+        runTest(true);
 
         if ((game === gameState.lobby && log === 'start') || (game === gameState.review && log === 'next')) socket.current?.emit('readyup', {roomID: room});
     }
@@ -200,7 +203,7 @@ const App = () => {
                 </div>
                 
                 <div id='testcontainer'>
-                    <Tests value={tests} theme={theme} />
+                    <Tests value={tests} test={test} runTest={runTest} playerCode={playerCode} theme={theme} />
                 </div>
 
                 <div id='consolecontainer'>
