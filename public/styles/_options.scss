@@ -21,6 +21,12 @@
         justify-content: center;
     }
 
+    #gamestate{
+        font-family: monospace;
+        font-size: 16px;
+        color: var(--text);
+    }
+
     #scoreboard{
         display: flex;
         flex-direction: column;

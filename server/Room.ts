@@ -29,6 +29,10 @@ class Room {
     readyup(): number{
         return ++this.ready;
     }
+
+    resetReady(): void{
+        this.ready = 0;
+    }
     
     nextQuestion(): void{
         this.answered++;

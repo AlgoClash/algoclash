@@ -46,6 +46,16 @@ input{
     outline: none;
 }
 
+hr{
+    width: 75%;
+    height: 1px;
+
+    outline: none;
+    border: none;
+
+    background: var(--trim);
+}
+
 #appcontainer{
     display: grid;
     grid-template-columns: 2fr 1fr 1fr .5fr;

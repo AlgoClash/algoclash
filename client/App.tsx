@@ -15,6 +15,14 @@ import { io, Socket } from "socket.io-client";
 
 import executeCode from './execute';
 
+enum gameState {
+    lobby,
+    ready,
+    play,
+    review,
+    end
+}
+
 const App = () => {
 
     const [id, setID] = useState<string>('');
@@ -22,24 +30,15 @@ const App = () => {
     const socket = useRef<Socket>();
     const [room, setRoom] = useState<string>('');
 
-    enum gameState {
-        lobby,
-        ready,
-        play,
-        review,
-        end
-    }
-
     const [game, setGameState] = useState<gameState>(gameState.lobby);
     
-    const [time, updateTime] = useState<number>(600);
     const [totalRounds, setTotalRounds] = useState<number>(3);
-    const [round, nextRound] = useState<number>(1);
+    const [round, nextRound] = useState<number>(0);
     const [wins, addWin] = useState<number>(0);
     const [score, calculateScore] = useState<string>(100 * (wins / round) +'%');
 
     const [playerCode, setPlayerCode] = useState<string>('');
-    const [challengerCode, setChallengerCode] = useState<string>('');
+    const [challengerCode, setChallengerCode] = useState<string>('asgdsgags');
     const [playerConsole, writeConsole] = useState<any>('console.log "start" to begin the game...');
     const [question, setQuestion] = useState<string>(``);
     const [tests, setTests] = useState<string>('');
@@ -49,7 +48,8 @@ const App = () => {
     const [modalTitle, setModalTitle] = useState<String>('');
     const [modalContent, setModalContent] = useState<any>(null);
 
-    const [theme, setTheme] = useState<string>('dark');
+    const [theme, setTheme] = useState<string>('');
+
     // compAlgos array holds completed algo names - need to invoke addAlgo(...compAlgos, curAlgo) on successful algo completion
     const [compAlgos, setCompAlgos] = useState<string[]>([]);
     // will hold current algo's name
@@ -108,6 +108,12 @@ const App = () => {
 
         socket.current?.on('readySuccess', data => {
             console.log(data);
+            setGameState(gameState.ready);
+        });
+
+        socket.current?.on('startGame', data => {
+            nextRound(round + 1);
+            setGameState(gameState.play);
         });
 
     }, [id]);
@@ -129,11 +135,20 @@ const App = () => {
         socket.current?.emit('keyDown', {roomID: room, userID: id, code: playerCode});
     }, [playerCode]);
 
+    useEffect(() => {
+
+        if (gameState[game] === 'review'){
+            socket.current?.emit('resetRound', {roomID: room});
+            writeConsole(`\n console.log "next" to begin the next round...`);
+        }
+
+    }, [game]);
+
     const evaluateCode = () => {
         const { code, log } = executeCode(playerCode);
         writeConsole(playerConsole + '\n' + log);
 
-        if (game === gameState.lobby && log === 'start') socket.current?.emit('readyup', {roomID: room, userID: id});
+        if ((game === gameState.lobby && log === 'start') || (game === gameState.review && log === 'next')) socket.current?.emit('readyup', {roomID: room});
     }
 
     // placeholder function to test getting new algos
@@ -170,8 +185,8 @@ const App = () => {
                 </div>
 
                 <div id='editorcontainer' className={`${collapsed ? 'collapsed' : ''}`}>
-                    <Editor user='player' username={`${id} (You)`} lanuage='js' value={playerCode} onChange={setPlayerCode} collapse={collapseChallenger} collapsed={collapsed} theme={theme} />
-                    {collapsed ? '' : <Editor user='challenger' username={`${challengerid} (Them)`} lanuage='js' value={challengerCode} onChange={setChallengerCode} theme={theme} />}
+                    <Editor user='player' username={`${id} (You)`} lanuage='js' value={playerCode} onChange={setPlayerCode} collapse={collapseChallenger} collapsed={collapsed} gameState={gameState} game={game} theme={theme} />
+                    {collapsed ? '' : <Editor user='challenger' username={`${challengerid} (Them)`} lanuage='js' value={challengerCode} gameState={gameState} game={game} onChange={setChallengerCode} theme={theme} />}
                 </div>
                 
                 <div id='testcontainer'>
@@ -183,7 +198,7 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-                    <Submit score={score} round={round} totalRounds={totalRounds} time={time} evaluateCode={evaluateCode} />
+                    <Submit score={score} round={round} totalRounds={totalRounds} game={game} setGameState={setGameState} evaluateCode={evaluateCode} submitCode={submitCode} />
                 </div>
 
             </div>

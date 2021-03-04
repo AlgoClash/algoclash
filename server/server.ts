@@ -49,20 +49,20 @@ io.on('connection', (socket) => {
   });
 
   socket.on('createRoom', ({roomID}) => {
-    const newRoom = new _Room(roomID, []);
+    const newRoom: Room = new _Room(roomID, []);
     rooms.push(newRoom);
     socket.emit('createSuccess', {roomID});
   });
 
   socket.on('joinRoom', ({roomID, userID}) => {
-    const targetRoom = rooms.findIndex(room => room.id === roomID);
+    const targetRoom: number = rooms.findIndex(room => room.id === roomID);
 
     if (!rooms[targetRoom].players.some(player => player.id === userID)) {
 
-      const newPlayer = new _Player(userID);
+      const newPlayer: Player = new _Player(userID);
       rooms[targetRoom].addPlayer(newPlayer);
 
-      const totalPlayers = rooms[targetRoom].players.reduce((acc, player) => {
+      const totalPlayers: [] = rooms[targetRoom].players.reduce((acc, player) => {
         acc.push(player.id);
         return acc;
       }, []);
@@ -73,13 +73,21 @@ io.on('connection', (socket) => {
   });
 
   socket.on('readyup', ({roomID}) => {
-    const targetRoom = rooms.findIndex(room => room.id === roomID);
-    const ready = rooms[targetRoom].readyup();
-    socket.emit('readySuccess', {ready, roomSize: rooms[targetRoom].players.length});
+    const targetRoom: number = rooms.findIndex(room => room.id === roomID);
+    const ready: number = rooms[targetRoom].readyup();
+
+    if (ready === 2) io.sockets.to(rooms[targetRoom].id).emit('startGame', {});
+    else socket.emit('readySuccess', {ready, roomSize: rooms[targetRoom].players.length});
+
+  });
+
+  socket.on('resetRound', ({roomID}) => {
+    const targetRoom: number = rooms.findIndex(room => room.id === roomID);
+    rooms[targetRoom].resetReady();
   });
 
   socket.on('keyDown', ({roomID, userID, code}) => {
-    const targetRoom = rooms.findIndex(room => room.id === roomID);
+    const targetRoom: number = rooms.findIndex(room => room.id === roomID);
     io.sockets.to(rooms[targetRoom].id).emit('writeCode', {userID, code});
   });
 
