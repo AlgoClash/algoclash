@@ -4,6 +4,7 @@ button{
     border-radius: 4px;
     padding: .25em .5em;
     margin: .25em;
+    color: var(--container);
     background-color: var(--btn);
 
     &:hover{
@@ -29,7 +30,7 @@ button{
 }
 
 #submitbtn{
-    color: var(--container);
+    color: var(--header);
     background-color: var(--btn);
 
     &:hover{
@@ -42,4 +43,25 @@ button{
     color: var(--text);
     outline: none;
     border: none;
+}
+
+#authbtn{
+
+    display: flex;
+    flex-direction: column;
+
+    button{
+        color: #757575;
+        background-color: white;
+        padding: .5em;
+        border-radius: 2px;
+        border: none;
+
+        box-shadow: rgb(0 0 0 / 24%) 0px 2px 2px 0px, rgb(0 0 0 / 24%) 0px 0px 1px 0px;
+
+        &:hover{
+            color: #6d6d6e;
+            background-color: #e9e9ea;
+        }
+    }
 }

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
+const GitHubIcon_1 = __importDefault(require("./GitHubIcon"));
 const react_google_login_1 = require("react-google-login");
 const react_github_login_1 = __importDefault(require("react-github-login"));
 const refreshToken_1 = require("../utils/refreshToken");
@@ -41,17 +42,21 @@ const Login = (props) => {
         console.log('[Login failed] res:', res);
     };
     return (react_1.default.createElement("div", { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' } },
-        react_1.default.createElement("h1", { style: { fontFamily: 'monospace', fontSize: '16px', color: 'white' } }, "Username"),
+        react_1.default.createElement("h1", { style: { fontFamily: 'monospace', fontSize: '16px' } }, "Username"),
         react_1.default.createElement("input", { type: 'text', onChange: usernameInput }),
         react_1.default.createElement("br", null),
-        react_1.default.createElement("h1", { style: { fontFamily: 'monospace', fontSize: '16px', color: 'white' } }, "Password"),
+        react_1.default.createElement("h1", { style: { fontFamily: 'monospace', fontSize: '16px' } }, "Password"),
         react_1.default.createElement("input", { type: 'text', onChange: passwordInput }),
         react_1.default.createElement("br", null),
         react_1.default.createElement("button", { onClick: submitButton, type: "button" }, "Confirm"),
         react_1.default.createElement("br", null),
         react_1.default.createElement("br", null),
-        react_1.default.createElement(react_google_login_1.GoogleLogin, { clientId: googleClientID, cookiePolicy: 'single_host_origin', isSignedIn: true, onSuccess: onSuccessGoogle, onFailure: onFailureGoogle }),
-        react_1.default.createElement(react_github_login_1.default, { clientId: ghClientId, onSuccess: onSuccessGithub, onFailure: onFailureGithub, redirectUri: redirectURL })));
+        react_1.default.createElement("div", { id: 'authbtn' },
+            react_1.default.createElement(react_google_login_1.GoogleLogin, { clientId: googleClientID, cookiePolicy: 'single_host_origin', isSignedIn: true, onSuccess: onSuccessGoogle, onFailure: onFailureGoogle }),
+            react_1.default.createElement(react_github_login_1.default, { clientId: ghClientId, onSuccess: onSuccessGithub, onFailure: onFailureGithub, redirectUri: redirectURL },
+                react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+                    react_1.default.createElement(GitHubIcon_1.default, null),
+                    " Sign in with GitHub")))));
 };
 exports.default = Login;
 //# sourceMappingURL=Login.js.map

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import GitHub from './GitHubIcon';
+
 import {GoogleLogin} from 'react-google-login'
 import GitHubLogin from 'react-github-login';
 
@@ -50,32 +52,35 @@ const Login = (props) => {
 
     return (
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} >
-            <h1 style={{fontFamily: 'monospace', fontSize: '16px', color: 'white'}} >Username</h1>
+            <h1 style={{fontFamily: 'monospace', fontSize: '16px'}} >Username</h1>
             <input type='text' onChange={usernameInput}/>
 
             <br/>
 
-            <h1 style={{fontFamily: 'monospace', fontSize: '16px', color: 'white'}}>Password</h1>
+            <h1 style={{fontFamily: 'monospace', fontSize: '16px'}}>Password</h1>
             <input type='text' onChange={passwordInput} />
             <br/>
             <button onClick={submitButton} type="button">Confirm</button>
 
             <br/><br/>
 
-            <GoogleLogin 
-                clientId={googleClientID}
-                cookiePolicy={'single_host_origin'}
-                isSignedIn={true}
-                onSuccess={onSuccessGoogle}
-                onFailure={onFailureGoogle}
-            />
+            <div id='authbtn'>
+                <GoogleLogin 
+                    clientId={googleClientID}
+                    cookiePolicy={'single_host_origin'}
+                    isSignedIn={true}
+                    onSuccess={onSuccessGoogle}
+                    onFailure={onFailureGoogle}
+                />
 
-            <GitHubLogin 
-                clientId= {ghClientId}
-                onSuccess={onSuccessGithub}
-                onFailure={onFailureGithub}
-                redirectUri={redirectURL}
-            />
+                <GitHubLogin 
+                    clientId= {ghClientId}
+                    onSuccess={onSuccessGithub}
+                    onFailure={onFailureGithub}
+                    redirectUri={redirectURL}
+                ><div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} ><GitHub /> Sign in with GitHub</div></GitHubLogin>
+            </div>
+
         </div>
     );
 }

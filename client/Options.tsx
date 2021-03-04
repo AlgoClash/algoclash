@@ -19,7 +19,7 @@ interface Props{
     submitCode: Function;
 }
 
-const Submit = memo<Props>(({score, round, game, setGameState, totalRounds, evaluateCode, submitCode}) => {
+const Options = memo<Props>(({score, round, game, setGameState, totalRounds, evaluateCode, submitCode}) => {
 
     const clockRef: any = useRef<Countdown>();
 
@@ -44,7 +44,7 @@ const Submit = memo<Props>(({score, round, game, setGameState, totalRounds, eval
             <>
                 <div id='countdown'>
                     <Countdown 
-                        date={Date.now() + (600000 / 10)}
+                        date={Date.now() + (600000 / 20)}
                         autoStart={false}
                         renderer={renderer}
                         ref={clockRef}
@@ -62,10 +62,10 @@ const Submit = memo<Props>(({score, round, game, setGameState, totalRounds, eval
 
             <div id='btncontainer' >
                 <button id='testbtn' onClick={() => evaluateCode()} >TEST</button>
-                <button onClick={() => submitCode()}>SUBMIT</button>
+                <button id='submitbtn' onClick={() => submitCode()}>SUBMIT</button>
             </div>
         </div>
     );
 });
 
-export default Submit;
+export default Options;

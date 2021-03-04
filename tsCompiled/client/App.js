@@ -30,7 +30,7 @@ const Editor_1 = __importDefault(require("./Editor"));
 const Console_1 = __importDefault(require("./Console"));
 const Question_1 = __importDefault(require("./Question"));
 const Tests_1 = __importDefault(require("./Tests"));
-const Submit_1 = __importDefault(require("./Submit"));
+const Options_1 = __importDefault(require("./Options"));
 const socket_io_client_1 = require("socket.io-client");
 const execute_1 = __importDefault(require("./execute"));
 var gameState;
@@ -52,7 +52,7 @@ const App = () => {
     const [wins, addWin] = react_1.useState(0);
     const [score, calculateScore] = react_1.useState(`0%`);
     const [playerCode, setPlayerCode] = react_1.useState('');
-    const [challengerCode, setChallengerCode] = react_1.useState('asgdsgags');
+    const [challengerCode, setChallengerCode] = react_1.useState('');
     const [playerConsole, writeConsole] = react_1.useState('console.log "start" to begin the game...');
     const [question, setQuestion] = react_1.useState(``);
     const [tests, setTests] = react_1.useState('');
@@ -114,6 +114,7 @@ const App = () => {
             setGameState(gameState.ready);
         });
         (_e = socket.current) === null || _e === void 0 ? void 0 : _e.on('startGame', data => {
+            clearEditors();
             nextRound(round + 1);
             setGameState(gameState.play);
         });
@@ -160,6 +161,10 @@ const App = () => {
             setCompAlgos([...compAlgos, curAlgo]);
         }
     };
+    const clearEditors = () => {
+        setPlayerCode('');
+        setChallengerCode('');
+    };
     const createModal = (title, content) => {
         setModalTitle(title);
         setModalContent(content);
@@ -184,7 +189,7 @@ const App = () => {
             react_1.default.createElement("div", { id: 'consolecontainer' },
                 react_1.default.createElement(Console_1.default, { value: playerConsole })),
             react_1.default.createElement("div", { id: 'optionscontainer' },
-                react_1.default.createElement(Submit_1.default, { score: score, round: round, totalRounds: totalRounds, game: game, setGameState: setGameState, evaluateCode: evaluateCode, submitCode: submitCode })))));
+                react_1.default.createElement(Options_1.default, { score: score, round: round, totalRounds: totalRounds, game: game, setGameState: setGameState, evaluateCode: evaluateCode, submitCode: submitCode })))));
 };
 exports.default = App;
 //# sourceMappingURL=App.js.map
