@@ -54,7 +54,6 @@ exports.addAlgo = (req, res, next) => {
 exports.getAll = (req, res, next) => {
   Algo.find({})
   .then(data => {
-    console.log('data---------> ', data)
     res.locals.allAlgos = data
     next()
   })

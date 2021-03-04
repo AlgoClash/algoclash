@@ -43,6 +43,8 @@ const _Player = require('./Player');
 
 const rooms = <any>[];
 
+const Algo = require('./models/Algo')
+
 io.on('connection', (socket) => {
 
   socket.on('connectClient', () => {
@@ -50,9 +52,17 @@ io.on('connection', (socket) => {
   });
 
   socket.on('createRoom', ({roomID}) => {
-    const newRoom: Room = new _Room(roomID, []);
-    rooms.push(newRoom);
-    socket.emit('createSuccess', {roomID});
+    Algo.find({})
+    .then(data => {
+
+      const shuffled = data.sort(() => 0.5 - Math.random());
+      let selected = shuffled.slice(0, 3);
+      
+      const newRoom: Room = new _Room(roomID, selected);
+      rooms.push(newRoom);
+      socket.emit('createSuccess', {roomID});
+    })
+    .catch(err => console.log(err));
   });
 
   socket.on('joinRoom', ({roomID, userID}) => {
@@ -69,7 +79,7 @@ io.on('connection', (socket) => {
       }, []);
 
       socket.join(rooms[targetRoom].id);
-      io.sockets.to(rooms[targetRoom].id).emit('playerJoined', {totalPlayers});
+      io.sockets.to(rooms[targetRoom].id).emit('playerJoined', {totalPlayers, roomQuestions: rooms[targetRoom].questions});
     }
   });
 
