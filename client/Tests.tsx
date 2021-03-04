@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import CodeMirror from '@skidding/react-codemirror';
 
@@ -19,7 +19,7 @@ const Tests = (props) => {
   const checkResults = (testResults) => {
     console.log('Checking test results:', testResults);
     if (testResults.includes('fail')) console.log('Did not pass all tests'); // if fail do this
-    else console.log('Passed all tests'); // if pass do this
+    else props.submitCode(); // if pass do this
   };
 
   // listening for messages from the iframe
@@ -29,13 +29,7 @@ const Tests = (props) => {
           checkResults(e.data[1]);
         }
     }, false);
-} else if (typeof window.attachEvent != 'undefined') { // this part is for IE8 -- from the stackoverflow I found it on
-    window.attachEvent('onmessage', function(e) {
-        if (e.data[0] === 'result') {
-          checkResults(e.data[1]);
-        }
-    });
-  }
+}
 
     useEffect(() => {
 
@@ -45,7 +39,7 @@ const Tests = (props) => {
         props.runTest(false);
 
     }, [props.test]);
-
+    
     const srcDoc = `
 <!DOCTYPE html>
 <html lang="en">
@@ -97,8 +91,6 @@ const Tests = (props) => {
           window.parent.postMessage(['result', result], '*');
         });
     </script>
-
-    <style>html{background-color:white;}</style>
 
   </body>
 </html>`;

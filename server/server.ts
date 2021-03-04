@@ -43,6 +43,8 @@ const _Player = require('./Player');
 
 const rooms = <any>[];
 
+const Algo = require('./models/Algo')
+
 io.on('connection', (socket) => {
 
   socket.on('connectClient', () => {
@@ -50,9 +52,17 @@ io.on('connection', (socket) => {
   });
 
   socket.on('createRoom', ({roomID}) => {
-    const newRoom: Room = new _Room(roomID, []);
-    rooms.push(newRoom);
-    socket.emit('createSuccess', {roomID});
+    Algo.find({})
+    .then(data => {
+
+      const shuffled = data.sort(() => 0.5 - Math.random());
+      let selected = shuffled.slice(0, 3);
+      
+      const newRoom: Room = new _Room(roomID, selected);
+      rooms.push(newRoom);
+      socket.emit('createSuccess', {roomID});
+    })
+    .catch(err => console.log(err));
   });
 
   socket.on('joinRoom', ({roomID, userID}) => {
@@ -69,7 +79,7 @@ io.on('connection', (socket) => {
       }, []);
 
       socket.join(rooms[targetRoom].id);
-      io.sockets.to(rooms[targetRoom].id).emit('playerJoined', {totalPlayers});
+      io.sockets.to(rooms[targetRoom].id).emit('playerJoined', {totalPlayers, roomQuestions: rooms[targetRoom].questions});
     }
   });
 
@@ -77,7 +87,7 @@ io.on('connection', (socket) => {
     const targetRoom: number = rooms.findIndex(room => room.id === roomID);
     const ready: number = rooms[targetRoom].readyup();
 
-    if (ready === 2) io.sockets.to(rooms[targetRoom].id).emit('startGame', {});
+    if (ready === 2) io.sockets.to(rooms[targetRoom].id).emit('startGame', {roomQuestions: rooms[targetRoom].questions});
     else socket.emit('readySuccess', {ready, roomSize: rooms[targetRoom].players.length});
 
   });
@@ -96,10 +106,6 @@ io.on('connection', (socket) => {
     console.log(`user ${socket.id} disconnected`);
   });
 
-  socket.on('ready', (data) => {
-    console.log(data);
-    socket.emit('ready2', {key: "returning the response"})
-  });
 });
 
 // global error handler --->
