@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, memo } from 'react';
-import Countdown, {zeroPad} from 'react-countdown';
 
 enum gameState {
     lobby,
@@ -17,39 +16,17 @@ interface Props{
     totalRounds: number;
     evaluateCode: Function;
     submitCode: Function;
+    timer: number;
 }
 
-const Options = memo<Props>(({score, round, game, setGameState, totalRounds, evaluateCode, submitCode}) => {
-
-    const clockRef: any = useRef<Countdown>();
-
-    const handleStart = (): void => clockRef.current?.start();
-    const handleStop = (): void => clockRef.current?.stop();
-    const renderer: any = ({ minutes, seconds, completed, _}) => {
-        if (completed){
-            round < totalRounds ? setGameState(gameState.review) : setGameState(gameState.end);
-            return <span>Times Up</span>;
-        } else return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
-    };
-
-    useEffect(() => {
-
-        if (gameState[game] === 'play') handleStart();
-        else handleStop();
-
-    }, [game]);
+const Options = memo<Props>(({score, round, game, setGameState, totalRounds, evaluateCode, submitCode, timer}) => {
 
     return (
         <div id='options'>
             <>
                 <div id='countdown'>
-                    <Countdown 
-                        date={Date.now() + (600000 / 20)}
-                        autoStart={false}
-                        renderer={renderer}
-                        ref={clockRef}
-                    />
-                </div>
+                    {timer}
+                </div>    
                 <div id='gamestate'>{gameState[game]}</div>
             </>
 
