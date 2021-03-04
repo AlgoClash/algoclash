@@ -161,9 +161,7 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-
                     <Submit score={score} round={round} totalRounds={totalRounds} time={time} startTimer={startTimer}/>
-
                 </div>
 
             </div>
