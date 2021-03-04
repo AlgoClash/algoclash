@@ -10,7 +10,6 @@ const Navbar = (props) => {
     }
 
     const toggleTheme = () => {
-
         if (props.theme === 'dark')
             props.setTheme('light');
         if (props.theme === 'light')
@@ -23,7 +22,7 @@ const Navbar = (props) => {
         <div id='navbar'>
             <a href="/">Algo Clash</a>
 
-            <h1>Room: {props.room}</h1>
+            <div style={{display: 'flex', alignItems: 'center'}} ><p>Room:</p> <h1>{props.room}</h1></div>
 
             <div>
                 <a onClick={createSignInModal} >Login/Sign Up</a>

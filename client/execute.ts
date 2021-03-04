@@ -1,6 +1,11 @@
 import transpile from './transpile';
 
-const executeCode = (code): string => {
+interface evaluatedCode {
+  code: Function;
+  log: string;
+}
+
+const executeCode = (code): evaluatedCode  => {
   try {
     const [output, error] = transpile(code);
 
@@ -34,9 +39,22 @@ const executeCode = (code): string => {
       };
     })();
 
-    return error.show ? error.errorMessage : ((new Function(output))(), consolelog);
+    (new Function(output))();
+
+    const message: evaluatedCode = {
+      code: new Function(output),
+      log: error.show ? error.errorMessage : consolelog
+    }
+
+    return message;
 
   } catch (error) {
+
+    const message: evaluatedCode = {
+      code: new Function(''),
+      log: error.toString()
+    }
+
     return error.toString();
   }
 }

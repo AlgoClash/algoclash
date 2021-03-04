@@ -11,7 +11,7 @@ class Player{
     }
 
     addScore(): void{
-        this.score += 1;
+        this.score++;
     }
   
 }

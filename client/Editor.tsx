@@ -24,7 +24,7 @@ const Editor = (props) => {
                 {props.user === 'challenger' ? '' : <button id='collapse' onClick={() => props.collapse(!props.collapsed)}>{props.collapsed ? `<<` : `>>`}</button>}
             </div>
 
-            <div className={`editor ${props.user === 'challenger' ? 'challenger' : 'player'}`} >
+            <div className={`editor ${props.user === 'challenger' ? 'challenger' : 'player'} ${props.gameState[props.game] === 'play' ? 'blur' : ''} `} >
                 <CodeMirror onChange={handleChange} options={options} value={props.value} />
             </div>
 

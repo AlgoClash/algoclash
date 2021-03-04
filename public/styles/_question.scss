@@ -1,6 +1,9 @@
 #question {
     .cm-s-lesser-dark.CodeMirror{
         background: var(--container-secondary) !important;
+        font-family: 'Barlow', sans-serif !important;
+        font-weight: 300;
+        font-size: 12px;
     }
     .cm-s-lesser-dark span.cm-comment{
         color: var(--text) !important;

@@ -18,7 +18,9 @@
 .challenger{
     user-select: none;
     pointer-events: none;
+}
 
+.challenger.blur{
     .cm-s-lesser-dark span{
         filter: blur(4px) !important;
     }

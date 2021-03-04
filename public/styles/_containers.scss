@@ -1,8 +1,11 @@
+.container{
+}
+
 .header{
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
     font-family: monospace;
     font-size: 16px;

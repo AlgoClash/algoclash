@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 
 const userRoute = require('./routes/User')
+const algoRoute = require('./routes/Algo')
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -18,18 +19,20 @@ mongoose.connect( MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }
 mongoose.connection.once("open", () => console.log("connected to database"));
 
 if (process.env.NODE_ENV === 'production') {
-  app.use('/build', express.static(path.join(__dirname, '../build')));
-  app.get('/', (_, res) => {
-    return res.status(200).sendFile(path.join(__dirname, '../index.html'));
-  });
+
+  console.log(path.join(__dirname, '../../dist'));
+
+  app.use('/dist', express.static(path.join(__dirname, '../../dist')));
+  
 };
 
-app.use('/user', userRoute)
+app.use('/user', userRoute);
 
-app.use('/', (_, res) => {
-  res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
+app.use('/algo', algoRoute);
+
+app.get('/', (_, res) => {
+  return res.status(200).sendFile(path.join(__dirname, '../../public/index.html'));
 });
-
 /* --- SOCKET.IO --- */
 
 const httpServer = require('http').Server(app);
@@ -47,20 +50,20 @@ io.on('connection', (socket) => {
   });
 
   socket.on('createRoom', ({roomID}) => {
-    const newRoom = new _Room(roomID, []);
+    const newRoom: Room = new _Room(roomID, []);
     rooms.push(newRoom);
     socket.emit('createSuccess', {roomID});
   });
 
   socket.on('joinRoom', ({roomID, userID}) => {
-    const targetRoom = rooms.findIndex(room => room.id === roomID);
+    const targetRoom: number = rooms.findIndex(room => room.id === roomID);
 
     if (!rooms[targetRoom].players.some(player => player.id === userID)) {
 
-      const newPlayer = new _Player(userID);
+      const newPlayer: Player = new _Player(userID);
       rooms[targetRoom].addPlayer(newPlayer);
 
-      const totalPlayers = rooms[targetRoom].players.reduce((acc, player) => {
+      const totalPlayers: [] = rooms[targetRoom].players.reduce((acc, player) => {
         acc.push(player.id);
         return acc;
       }, []);
@@ -70,8 +73,22 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('readyup', ({roomID}) => {
+    const targetRoom: number = rooms.findIndex(room => room.id === roomID);
+    const ready: number = rooms[targetRoom].readyup();
+
+    if (ready === 2) io.sockets.to(rooms[targetRoom].id).emit('startGame', {});
+    else socket.emit('readySuccess', {ready, roomSize: rooms[targetRoom].players.length});
+
+  });
+
+  socket.on('resetRound', ({roomID}) => {
+    const targetRoom: number = rooms.findIndex(room => room.id === roomID);
+    rooms[targetRoom].resetReady();
+  });
+
   socket.on('keyDown', ({roomID, userID, code}) => {
-    const targetRoom = rooms.findIndex(room => room.id === roomID);
+    const targetRoom: number = rooms.findIndex(room => room.id === roomID);
     io.sockets.to(rooms[targetRoom].id).emit('writeCode', {userID, code});
   });
 
@@ -83,13 +100,12 @@ io.on('connection', (socket) => {
     console.log(data);
     socket.emit('ready2', {key: "returning the response"})
   });
-
 });
 
 // global error handler --->
 app.use((err, _, res, next) => {
     const defaultErr = {
-      log: 'Express error handler caught unknown middleware error',
+      log: `Express error handler caught unknown middleware error: ${err}`,
       status: 500,
       message: { err: 'An error occurred' },
     };

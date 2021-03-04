@@ -9,12 +9,19 @@ import Editor from './Editor';
 import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
-import Submit from './Submit';
+import Options from './Options';
 
 import { io, Socket } from "socket.io-client";
 
-import { EXanswer, EXquestion, EXtests } from '../testdata.js';
 import executeCode from './execute';
+
+enum gameState {
+    lobby,
+    ready,
+    play,
+    review,
+    end
+}
 
 const App = () => {
 
@@ -22,20 +29,19 @@ const App = () => {
     const [challengerid, setChallengerID] = useState<string>('Waiting for partner...');
     const socket = useRef<Socket>();
     const [room, setRoom] = useState<string>('');
+
+    const [game, setGameState] = useState<gameState>(gameState.lobby);
     
-    const [time, updateTime] = useState<Number>(600);
-    const [totalRounds, setTotalRounds] = useState<Number>(3);
-    const [round, nextRound] = useState<number>(1);
+    const [totalRounds, setTotalRounds] = useState<number>(3);
+    const [round, nextRound] = useState<number>(0);
     const [wins, addWin] = useState<number>(0);
-    const [score, calculateScore] = useState<string>('0%'); //100 * (wins / round) +'%'
+    const [score, calculateScore] = useState<string>(`0%`);
 
     const [playerCode, setPlayerCode] = useState<string>('');
-    const [challengerCode, setChallengerCode] = useState<string>('const test = (arg) => { console.log("hello!"); }');
-
+    const [challengerCode, setChallengerCode] = useState<string>('');
+    const [playerConsole, writeConsole] = useState<any>('console.log "start" to begin the game...');
     const [question, setQuestion] = useState<string>(``);
     const [tests, setTests] = useState<string>('');
-
-    const [playerConsole, writeConsole] = useState<any>('');
 
     const [collapsed, collapseChallenger] = useState<Boolean>(false);
     const [modal, toggleModal] = useState<Boolean>(true);
@@ -44,7 +50,10 @@ const App = () => {
 
     const [theme, setTheme] = useState<string>('');
 
-    const [ready, setTimer] = useState<Boolean>(false);
+    // compAlgos array holds completed algo names - need to invoke addAlgo(...compAlgos, curAlgo) on successful algo completion
+    const [compAlgos, setCompAlgos] = useState<string[]>([]);
+    // will hold current algo's name
+    const [curAlgo, setCurAlgo] = useState<string>('');
 
     useEffect(() => {
 
@@ -53,16 +62,33 @@ const App = () => {
         socket.current.on('connect', () => socket.current?.emit('connectClient'));
         socket.current.on('connectSuccess', data => setID(data.socketID));
 
-        setPlayerCode(EXanswer);
-        setQuestion(EXquestion);
-        setTests(EXtests);
-
         return () => { socket.current?.disconnect(); };
 
     }, []);
 
+    // request new algo from db onmount & when a new completed algo is added to compAlgos
+    // not sure where this goes, inside socket server?
     useEffect(() => {
+      // pass compAlgos array to get non-completed algo
+      fetch('/algo', {
+        method: 'POST', 
+        headers: { 'Content-Type': 'Application/JSON' },
+        body: JSON.stringify(compAlgos)
+      })
+      .then(res => res.json())
+      .then(algo => {
+        console.log('algo returned from fetch:', algo);
+        // sets returned algo question
+        setQuestion(algo.question);
+        // sets returned algo tests
+        setTests(algo.tests);
+        // store current algo name
+        setCurAlgo(algo.algoName);
+      })
+  }, [compAlgos]);
 
+    useEffect(() => {
+        // writeJS(playerCode);
         if (id === '') return;
 
         createModal('Enter a Room', <CreateRoom createRoom={createRoom} joinRoom={joinRoom} />)
@@ -79,6 +105,17 @@ const App = () => {
         socket.current?.on('createSuccess', ({roomID}) => {
             joinRoom(roomID);
         })
+
+        socket.current?.on('readySuccess', data => {
+            console.log(data);
+            setGameState(gameState.ready);
+        });
+
+        socket.current?.on('startGame', data => {
+            clearEditors();
+            nextRound(round + 1);
+            setGameState(gameState.play);
+        });
 
     }, [id]);
 
@@ -99,39 +136,49 @@ const App = () => {
         socket.current?.emit('keyDown', {roomID: room, userID: id, code: playerCode});
     }, [playerCode]);
 
+    useEffect(() => {
+
+        if (gameState[game] === 'review'){
+            socket.current?.emit('resetRound', {roomID: room});
+            writeConsole(`\n console.log "next" to begin the next round...`);
+        }
+
+    }, [game]);
+
+    useEffect(() => {
+        wins === 0 ? calculateScore('0%') : calculateScore(100 * (wins / round) + '%');
+    }, [round]);
+
     const evaluateCode = () => {
-        writeConsole(playerConsole + ('\n').repeat(2) + executeCode(playerCode));
+        const { code, log } = executeCode(playerCode);
+        writeConsole(playerConsole + '\n' + log);
+
+        if ((game === gameState.lobby && log === 'start') || (game === gameState.review && log === 'next')) socket.current?.emit('readyup', {roomID: room});
+    }
+
+    // placeholder function to test getting new algos
+    const submitCode = () => {
+      // adds completed algo name to array on sucessfull answer
+      if(curAlgo.length) {
+        setCompAlgos([...compAlgos, curAlgo])
+      }
+    }
+
+    const clearEditors = () => {
+        setPlayerCode('');
+        setChallengerCode('');
     }
 
     const createModal = (title, content) => {
-        setModalTitle(title);
-        setModalContent(content);
+      setModalTitle(title);
+      setModalContent(content);
 
-        toggleModal(true);
-    }
+      toggleModal(true);
+  }
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
     }, [theme]);
-      
-    const startTimer = () => {
-        console.log('challenger id', challengerid)
-        if (challengerid === 'Waiting for partner...') {
-            console.log('timer can start')
-        } else {
-            console.log('waiting on other player')
-        }
-        if (!ready) setTimer(true)
-    }
-
-    useEffect(() => {
-        if (ready === false) return;
-        console.log('useEffect for ready working')
-        socket.current?.emit('ready', {key: 'ready button clicked'});
-        socket.current?.on('ready2', (data) => {
-            console.log('ready2 response triggered')
-        })
-    }, [ready]);
 
     return (
         <>
@@ -148,8 +195,8 @@ const App = () => {
                 </div>
 
                 <div id='editorcontainer' className={`${collapsed ? 'collapsed' : ''}`}>
-                    <Editor user='player' username={`${id} (You)`} lanuage='js' value={playerCode} onChange={setPlayerCode} collapse={collapseChallenger} collapsed={collapsed} theme={theme} />
-                    {collapsed ? '' : <Editor user='challenger' username={`${challengerid} (Them)`} lanuage='js' value={challengerCode} onChange={setChallengerCode} theme={theme} />}
+                    <Editor user='player' username={`${id} (You)`} lanuage='js' value={playerCode} onChange={setPlayerCode} collapse={collapseChallenger} collapsed={collapsed} gameState={gameState} game={game} theme={theme} />
+                    {collapsed ? '' : <Editor user='challenger' username={`${challengerid} (Them)`} lanuage='js' value={challengerCode} gameState={gameState} game={game} onChange={setChallengerCode} theme={theme} />}
                 </div>
                 
                 <div id='testcontainer'>
@@ -161,7 +208,11 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
+<<<<<<< HEAD
                     <Submit score={score} round={round} totalRounds={totalRounds} time={time} startTimer={startTimer}/>
+=======
+                    <Options score={score} round={round} totalRounds={totalRounds} game={game} setGameState={setGameState} evaluateCode={evaluateCode} submitCode={submitCode} />
+>>>>>>> 9c12491f1a1ed443a9d0461743aebd5148983f90
                 </div>
 
             </div>
@@ -169,5 +220,5 @@ const App = () => {
     );
 }
 
+
 export default App;
-       
