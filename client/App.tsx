@@ -13,7 +13,6 @@ import Submit from './Submit';
 
 import { io, Socket } from "socket.io-client";
 
-import { EXanswer, EXquestion, EXtests } from '../testdata.js';
 import executeCode from './execute';
 
 const App = () => {
@@ -33,8 +32,8 @@ const App = () => {
 
     const [game, setGameState] = useState<gameState>(gameState.lobby);
     
-    const [time, updateTime] = useState<Number>(600);
-    const [totalRounds, setTotalRounds] = useState<Number>(3);
+    const [time, updateTime] = useState<number>(600);
+    const [totalRounds, setTotalRounds] = useState<number>(3);
     const [round, nextRound] = useState<number>(1);
     const [wins, addWin] = useState<number>(0);
     const [score, calculateScore] = useState<string>(100 * (wins / round) +'%');
@@ -50,7 +49,11 @@ const App = () => {
     const [modalTitle, setModalTitle] = useState<String>('');
     const [modalContent, setModalContent] = useState<any>(null);
 
-    const [theme, setTheme] = useState<string>('');
+    const [theme, setTheme] = useState<string>('dark');
+    // compAlgos array holds completed algo names - need to invoke addAlgo(...compAlgos, curAlgo) on successful algo completion
+    const [compAlgos, setCompAlgos] = useState<string[]>([]);
+    // will hold current algo's name
+    const [curAlgo, setCurAlgo] = useState<string>('');
 
     useEffect(() => {
 
@@ -59,16 +62,33 @@ const App = () => {
         socket.current.on('connect', () => socket.current?.emit('connectClient'));
         socket.current.on('connectSuccess', data => setID(data.socketID));
 
-        // setPlayerCode(EXanswer);
-        setQuestion(EXquestion);
-        setTests(EXtests);
-
         return () => { socket.current?.disconnect(); };
 
     }, []);
 
+    // request new algo from db onmount & when a new completed algo is added to compAlgos
+    // not sure where this goes, inside socket server?
     useEffect(() => {
+      // pass compAlgos array to get non-completed algo
+      fetch('/algo', {
+        method: 'POST', 
+        headers: { 'Content-Type': 'Application/JSON' },
+        body: JSON.stringify(compAlgos)
+      })
+      .then(res => res.json())
+      .then(algo => {
+        console.log('algo returned from fetch:', algo);
+        // sets returned algo question
+        setQuestion(algo.question);
+        // sets returned algo tests
+        setTests(algo.tests);
+        // store current algo name
+        setCurAlgo(algo.algoName);
+      })
+  }, [compAlgos]);
 
+    useEffect(() => {
+        // writeJS(playerCode);
         if (id === '') return;
 
         createModal('Enter a Room', <CreateRoom createRoom={createRoom} joinRoom={joinRoom} />)
@@ -116,12 +136,20 @@ const App = () => {
         if (game === gameState.lobby && log === 'start') socket.current?.emit('readyup', {roomID: room, userID: id});
     }
 
-    const createModal = (title, content) => {
-        setModalTitle(title);
-        setModalContent(content);
-
-        toggleModal(true);
+    // placeholder function to test getting new algos
+    const submitCode = () => {
+      // adds completed algo name to array on sucessfull answer
+      if(curAlgo.length) {
+        setCompAlgos([...compAlgos, curAlgo])
+      }
     }
+
+    const createModal = (title, content) => {
+      setModalTitle(title);
+      setModalContent(content);
+
+      toggleModal(true);
+  }
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
@@ -155,9 +183,7 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-
                     <Submit score={score} round={round} totalRounds={totalRounds} time={time} evaluateCode={evaluateCode} />
-
                 </div>
 
             </div>
@@ -165,5 +191,5 @@ const App = () => {
     );
 }
 
+
 export default App;
-       
