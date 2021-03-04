@@ -42,6 +42,8 @@ const App = () => {
     const [playerConsole, writeConsole] = useState<any>('console.log "start" to begin the game...');
     const [question, setQuestion] = useState<string>(``);
     const [tests, setTests] = useState<string>('');
+    
+    const [test, runTest] = useState<boolean>(false);
 
     const [collapsed, collapseChallenger] = useState<Boolean>(false);
     const [modal, toggleModal] = useState<Boolean>(true);
@@ -69,24 +71,31 @@ const App = () => {
 
     // request new algo from db onmount & when a new completed algo is added to compAlgos
     // not sure where this goes, inside socket server?
+//     useEffect(() => {
+//       // pass compAlgos array to get non-completed algo
+//       fetch('/algo', {
+//         method: 'POST', 
+//         headers: { 'Content-Type': 'Application/JSON' },
+//         body: JSON.stringify(compAlgos)
+//       })
+//       .then(res => res.json())
+//       .then(algo => {
+//         console.log('algo returned from fetch:', algo);
+//         // sets returned algo question
+//         setQuestion(algo.question);
+//         // sets returned algo tests
+//         setTests(algo.tests);
+//         // store current algo name
+//         setCurAlgo(algo.algoName);
+//       })
+//   }, [compAlgos]);
+
     useEffect(() => {
-      // pass compAlgos array to get non-completed algo
-      fetch('/algo', {
-        method: 'POST', 
-        headers: { 'Content-Type': 'Application/JSON' },
-        body: JSON.stringify(compAlgos)
-      })
-      .then(res => res.json())
-      .then(algo => {
-        console.log('algo returned from fetch:', algo);
-        // sets returned algo question
-        setQuestion(algo.question);
-        // sets returned algo tests
-        setTests(algo.tests);
-        // store current algo name
-        setCurAlgo(algo.algoName);
-      })
-  }, [compAlgos]);
+        console.log('fetching data')
+        fetch('/algo/getAllQuestions')
+        .then(response=>response.json())
+        .then(data => console.log('LIST OF QUESTIONS ----------->', data))
+    })
 
     useEffect(() => {
         // writeJS(playerCode);
@@ -122,7 +131,7 @@ const App = () => {
 
     const createRoom = (roomID: string): void => {
         setRoom(roomID);
-        socket.current?.emit('createRoom', {roomID});
+        socket.current?.emit('createRoom', {roomID}, [question]);
         toggleModal(false);
     }
 
@@ -153,6 +162,7 @@ const App = () => {
     const evaluateCode = () => {
         const { code, log } = executeCode(playerCode);
         writeConsole(playerConsole + '\n' + log);
+        runTest(true);
 
         if ((game === gameState.lobby && log === 'start') || (game === gameState.review && log === 'next')) socket.current?.emit('readyup', {roomID: room});
     }
@@ -223,7 +233,7 @@ const App = () => {
                 </div>
                 
                 <div id='testcontainer'>
-                    <Tests value={tests} theme={theme} />
+                    <Tests value={tests} test={test} runTest={runTest} playerCode={playerCode} theme={theme} />
                 </div>
 
                 <div id='consolecontainer'>
