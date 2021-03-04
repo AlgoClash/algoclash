@@ -1,14 +1,41 @@
-//LIGHT PALETTE
-[data-theme='light'] {
-    $bg: #FCFCFC;
-    $header: #EBEBEB;
-    $trim: #EBEBEB;
-    $container: white;
-    $gutter: #f7f7f7;
-    $container-secondary: white;
-    $navbar: white;
-    $text: #333333;
+html{
+    --bg: #161b1f;
+    --header: #262b2f;
+    --trim: #4b657e;
+    --container: #080a11;
+    --gutter: #151a1e;
+    --container-secondary: #262b2f;
+    --navbar: #161b1f;
+    --text: #cacfd3;
 
-    $btn: #0565d3;
-    $btnhover: #0077ff;
+    --btn: #5f97dc;
+    --btnhover: #8cb3e5;
+}
+
+html[data-theme='dark'] {
+    --bg: #303133;
+    --header: #262729;
+    --trim: #424242;
+    --container: #151515;
+    --gutter: #202020;
+    --container-secondary: #262626;
+    --navbar: #303133;
+    --text: #eaeaea;
+
+    --btn: #7d4e57ff;
+    --btnhover: #d66853ff;
+}
+
+html[data-theme='light']{
+    --bg: #FCFCFC;
+    --header: #EBEBEB;
+    --trim: #EBEBEB;
+    --container: white;
+    --gutter: #f7f7f7;
+    --container-secondary: white;
+    --navbar: white;
+    --text: #333333;
+
+    --btn: #0565d3;
+    --btnhover: #0077ff;
 }

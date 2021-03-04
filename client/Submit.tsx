@@ -1,50 +1,71 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import Countdown, {zeroPad} from 'react-countdown';
 
-const Submit = (props) => {
-    // https://stackoverflow.com/questions/59130667/how-to-call-start-and-pause-functions-from-the-react-countdown-now-library#59132405
-    const clockRef = useRef();
-    const handleStart = () => clockRef.current.start();
+enum gameState {
+    lobby,
+    ready,
+    play,
+    review,
+    end
+}
 
-    const renderer = ({ minutes, seconds, completed, api}) => {
-        console.log(api)
-        if (completed) {
-          // Render a completed state
-          return <span>Times Up</span>;
-        } else {
-          // Render a countdown
-          return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
-        }
-      };
+interface Props{
+    score: string;
+    round: number;
+    game: gameState;
+    setGameState: Function;
+    totalRounds: number;
+    evaluateCode: Function;
+    submitCode: Function;
+}
+
+const Submit = memo<Props>(({score, round, game, setGameState, totalRounds, evaluateCode, submitCode}) => {
+
+    const clockRef: any = useRef<Countdown>();
+
+    const handleStart = (): void => clockRef.current?.start();
+    const handleStop = (): void => clockRef.current?.stop();
+    const renderer: any = ({ minutes, seconds, completed, _}) => {
+        if (completed){
+            round < totalRounds ? setGameState(gameState.review) : setGameState(gameState.end);
+            return <span>Times Up</span>;
+        } else return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
+    };
+
+    useEffect(() => {
+
+        if (gameState[game] === 'play') handleStart();
+        else handleStop();
+
+    }, [game]);
 
     return (
         <div id='options'>
-            <div>
-                <h1>
+            <>
+                <div id='countdown'>
                     <Countdown 
-                        date={Date.now() + (.1 * 60 * 1000)}
+                        date={Date.now() + (6000)}//00)}
                         autoStart={false}
                         renderer={renderer}
                         ref={clockRef}
                     />
-                </h1>
-                <button id='testbtn' onClick={handleStart} >Start Counter</button>
-                <button id='testbtn' onClick={props.startTimer} >Start Counter</button>
-            </div>
+                </div>
+                <div id='gamestate'>{gameState[game]}</div>
+            </>
+
+            <hr/>
 
             <div id='scoreboard'>
-                <h2 id='score' >{props.score}</h2>
-                <h3 id='round' >{props.round} of {props.totalRounds}</h3>
+                <h2 id='score' >{score}</h2>
+                <h3 id='round' >{round} of {totalRounds}</h3>
             </div>
 
             <div id='btncontainer' >
-                <button id='testbtn' onClick={props.evaluateCode} >TEST</button>
-                <button onClick={props.submitCode}>SUBMIT</button>
+                <button id='testbtn' onClick={() => evaluateCode()} >TEST</button>
+                <button onClick={() => submitCode()}>SUBMIT</button>
             </div>
         </div>
-    )
-}
+    );
+});
 
 export default Submit;
-
-//<h1 id='timer' >{props.time}</h1>
