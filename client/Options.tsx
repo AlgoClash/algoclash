@@ -12,14 +12,13 @@ interface Props{
     score: string;
     round: number;
     game: gameState;
-    setGameState: Function;
     totalRounds: number;
     evaluateCode: Function;
     submitCode: Function;
     timer: number;
 }
 
-const Options = memo<Props>(({score, round, game, setGameState, totalRounds, evaluateCode, submitCode, timer}) => {
+const Options = memo<Props>(({score, round, game, timer, totalRounds, evaluateCode, submitCode}) => {
 
     return (
         <div id='options'>

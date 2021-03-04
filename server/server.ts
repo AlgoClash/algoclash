@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
     const targetRoom: number = rooms.findIndex(room => room.id === roomID);
     const ready: number = rooms[targetRoom].readyup();
 
-    if (ready === 2) io.sockets.to(rooms[targetRoom].id).emit('startGame', {});
+    if (ready === 2) io.sockets.to(rooms[targetRoom].id).emit('startGame', {roomQuestions: rooms[targetRoom].questions});
     else socket.emit('readySuccess', {ready, roomSize: rooms[targetRoom].players.length});
 
   });
@@ -106,10 +106,6 @@ io.on('connection', (socket) => {
     console.log(`user ${socket.id} disconnected`);
   });
 
-  socket.on('ready', (data) => {
-    console.log(data);
-    socket.emit('ready2', {key: "returning the response"})
-  });
 });
 
 // global error handler --->

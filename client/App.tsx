@@ -24,7 +24,7 @@ enum gameState {
 }
 
 const App = () => {
-    const startTime = 3;
+
     const [id, setID] = useState<string>('');
     const [challengerid, setChallengerID] = useState<string>('Waiting for partner...');
     const socket = useRef<Socket>();
@@ -32,6 +32,8 @@ const App = () => {
 
     const [game, setGameState] = useState<gameState>(gameState.lobby);
     
+    const startTime = 10;
+    const [timer, setTimer] = useState<number>(startTime);
     const [totalRounds, setTotalRounds] = useState<number>(3);
     const [round, nextRound] = useState<number>(0);
     const [wins, addWin] = useState<number>(0);
@@ -53,12 +55,6 @@ const App = () => {
     const [modalContent, setModalContent] = useState<any>(null);
 
     const [theme, setTheme] = useState<string>('');
-    const [timer, setTimer] = useState<number>(startTime);
-
-    // compAlgos array holds completed algo names - need to invoke addAlgo(...compAlgos, curAlgo) on successful algo completion
-    const [compAlgos, setCompAlgos] = useState<string[]>([]);
-    // will hold current algo's name
-    const [curAlgo, setCurAlgo] = useState<string>('');
 
     useEffect(() => {
 
@@ -95,13 +91,26 @@ const App = () => {
             setGameState(gameState.ready);
         });
 
+    }, [id]);
+
+    useEffect(() => {
+
+        if (id === '') return;
+
         socket.current?.on('startGame', data => {
+            setQuestion(data.roomQuestions[round].question);
+            setTests(data.roomQuestions[round].tests);
             clearEditors();
+
             nextRound(round + 1);
             setGameState(gameState.play);
         });
+        
+    }, [id, round]);
 
-    }, [id]);
+    useEffect(() => {
+        console.log(questions);
+    }, [questions]);
 
     const createRoom = (roomID: string): void => {
         setRoom(roomID);
@@ -141,12 +150,7 @@ const App = () => {
         if ((game === gameState.lobby && log === 'start') || (game === gameState.review && log === 'next')) socket.current?.emit('readyup', {roomID: room});
     }
 
-    // placeholder function to test getting new algos
     const submitCode = () => {
-      // adds completed algo name to array on sucessfull answer
-      if(curAlgo.length) {
-        setCompAlgos([...compAlgos, curAlgo])
-      }
     }
 
     const clearEditors = () => {
@@ -162,31 +166,24 @@ const App = () => {
   }
 
     useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-    }, [theme]);
-
-    useEffect(() => {
-
-        if (game === 2) {
-
-            let newTime = timer - 1;
-            
-            setTimeout(() => setTimer(newTime), 1000);
-         
-        }
+        if (game !== 2) return;
+        setTimeout(() => setTimer(timer - 1), 1000);
     }, [game]);
 
     useEffect(() => {
-        if (game!= 2) return;
+
+        if (game !== 2) return;
 
         if (timer === 0) {
             round < totalRounds ? setGameState(gameState.review) : setGameState(gameState.end);
-            setTimer(startTime)
-        } else {
-            let newTime = timer - 1;
-            setTimeout(() => setTimer(newTime), 1000);
-        }
+            setTimer(startTime);
+        } else setTimeout(() => setTimer(timer - 1), 1000);
+
     },[timer]);
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, [theme]);
 
     return (
         <>
@@ -216,7 +213,7 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-                    <Options score={score} round={round} totalRounds={totalRounds} game={game} timer={timer} setGameState={setGameState} evaluateCode={evaluateCode} submitCode={submitCode} />
+                    <Options score={score} round={round} totalRounds={totalRounds} game={game} timer={timer} evaluateCode={evaluateCode} submitCode={submitCode} />
                 </div>
 
             </div>
