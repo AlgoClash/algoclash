@@ -1,0 +1,14 @@
+declare const express: any;
+declare const cookieParser: any;
+declare const app: any;
+declare const path: any;
+declare const PORT: string | number;
+declare const mongoose: any;
+declare const userRoute: any;
+declare const algoRoute: any;
+declare const MONGO_URI = "mongodb+srv://Ian:CSmongo23@cluster0.z8sil.mongodb.net/AlgoClash?retryWrites=true&w=majority";
+declare const httpServer: any;
+declare const io: any;
+declare const _Room: any;
+declare const _Player: any;
+declare const rooms: any;

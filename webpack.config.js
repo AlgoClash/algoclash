@@ -7,8 +7,11 @@ module.exports = {
   mode: isDevelopment ? 'development' : 'production',
   devtool: 'eval-cheap-module-source-map',
   output: {
+    path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    path: path.resolve(__dirname, '/dist'),
+    libraryTarget: 'umd',
+    library: 'MyLib',
+    umdNamedDefine: true
   },
   module: {
     rules: [
@@ -27,7 +30,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.jsx?/,
+        test: /\.js(x)?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
