@@ -53,7 +53,7 @@ const Submit = react_1.memo(({ score, round, game, setGameState, totalRounds, ev
     return (react_1.default.createElement("div", { id: 'options' },
         react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement("div", { id: 'countdown' },
-                react_1.default.createElement(react_countdown_1.default, { date: Date.now() + (600000 / 10), autoStart: false, renderer: renderer, ref: clockRef })),
+                react_1.default.createElement(react_countdown_1.default, { date: Date.now() + (600000 / 20), autoStart: false, renderer: renderer, ref: clockRef })),
             react_1.default.createElement("div", { id: 'gamestate' }, gameState[game])),
         react_1.default.createElement("hr", null),
         react_1.default.createElement("div", { id: 'scoreboard' },

@@ -9,7 +9,7 @@ import Editor from './Editor';
 import Console from './Console';
 import Question from './Question';
 import Tests from './Tests';
-import Submit from './Submit';
+import Options from './Options';
 
 import { io, Socket } from "socket.io-client";
 
@@ -38,7 +38,7 @@ const App = () => {
     const [score, calculateScore] = useState<string>(`0%`);
 
     const [playerCode, setPlayerCode] = useState<string>('');
-    const [challengerCode, setChallengerCode] = useState<string>('asgdsgags');
+    const [challengerCode, setChallengerCode] = useState<string>('');
     const [playerConsole, writeConsole] = useState<any>('console.log "start" to begin the game...');
     const [question, setQuestion] = useState<string>(``);
     const [tests, setTests] = useState<string>('');
@@ -112,6 +112,7 @@ const App = () => {
         });
 
         socket.current?.on('startGame', data => {
+            clearEditors();
             nextRound(round + 1);
             setGameState(gameState.play);
         });
@@ -163,6 +164,11 @@ const App = () => {
       }
     }
 
+    const clearEditors = () => {
+        setPlayerCode('');
+        setChallengerCode('');
+    }
+
     const createModal = (title, content) => {
       setModalTitle(title);
       setModalContent(content);
@@ -202,7 +208,7 @@ const App = () => {
                 </div>
 
                 <div id='optionscontainer'>
-                    <Submit score={score} round={round} totalRounds={totalRounds} game={game} setGameState={setGameState} evaluateCode={evaluateCode} submitCode={submitCode} />
+                    <Options score={score} round={round} totalRounds={totalRounds} game={game} setGameState={setGameState} evaluateCode={evaluateCode} submitCode={submitCode} />
                 </div>
 
             </div>
