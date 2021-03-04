@@ -40,6 +40,8 @@ const App = () => {
     const [playerCode, setPlayerCode] = useState<string>('');
     const [challengerCode, setChallengerCode] = useState<string>('');
     const [playerConsole, writeConsole] = useState<any>('console.log "start" to begin the game...');
+
+    const [questions, setQuestions] = useState<string[]>([]);
     const [question, setQuestion] = useState<string>(``);
     const [tests, setTests] = useState<string>('');
     
@@ -68,42 +70,14 @@ const App = () => {
 
     }, []);
 
-    // request new algo from db onmount & when a new completed algo is added to compAlgos
-    // not sure where this goes, inside socket server?
-//     useEffect(() => {
-//       // pass compAlgos array to get non-completed algo
-//       fetch('/algo', {
-//         method: 'POST', 
-//         headers: { 'Content-Type': 'Application/JSON' },
-//         body: JSON.stringify(compAlgos)
-//       })
-//       .then(res => res.json())
-//       .then(algo => {
-//         console.log('algo returned from fetch:', algo);
-//         // sets returned algo question
-//         setQuestion(algo.question);
-//         // sets returned algo tests
-//         setTests(algo.tests);
-//         // store current algo name
-//         setCurAlgo(algo.algoName);
-//       })
-//   }, [compAlgos]);
-
     useEffect(() => {
-        console.log('fetching data')
-        fetch('/algo/getAllQuestions')
-        .then(response=>response.json())
-        .then(data => console.log('LIST OF QUESTIONS ----------->', data))
-    })
-
-    useEffect(() => {
-        // writeJS(playerCode);
         if (id === '') return;
 
         createModal('Enter a Room', <CreateRoom createRoom={createRoom} joinRoom={joinRoom} />)
 
-        socket.current?.on('playerJoined', ({totalPlayers}) => {
+        socket.current?.on('playerJoined', ({totalPlayers, roomQuestions}) => {
             if (totalPlayers.length > 1) setChallengerID(totalPlayers.filter(playerID => playerID !== id)[0]);
+            setQuestions(roomQuestions);
         });
 
         socket.current?.on('writeCode', ({userID, code}) => {
@@ -130,7 +104,7 @@ const App = () => {
 
     const createRoom = (roomID: string): void => {
         setRoom(roomID);
-        socket.current?.emit('createRoom', {roomID}, [question]);
+        socket.current?.emit('createRoom', {roomID});
         toggleModal(false);
     }
 

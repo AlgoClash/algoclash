@@ -23,7 +23,7 @@ const Tests = (props) => {
         props.runTest(false);
 
     }, [props.test]);
-
+    
     const srcDoc = `
 <!DOCTYPE html>
 <html lang="en">
@@ -58,7 +58,28 @@ const Tests = (props) => {
       });</script>
 
     <script class="mocha-exec">
-      mocha.run();
+      mocha.run()
+        .on('test', function(test) {
+          console.log('Test started: '+test.title);
+        })
+        .on('test end', function(test) {
+            console.log('Test done: '+test.title);
+        })
+        .on('pass', function(test) {
+            console.log('Test passed');
+            console.log(test);
+            // const pass = document.createElement("div");
+            // const newContent = document.createTextNode("PASS CHECK");
+            // pass.appendChild(newContent);
+          })
+        .on('fail', function(test, err) {
+            console.log('Test fail');
+            console.log(test);
+            console.log(err);
+        })
+        .on('end', function() {
+            console.log('All done');
+        });
     </script>
 
   </body>
