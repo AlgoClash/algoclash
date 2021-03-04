@@ -7,8 +7,11 @@ module.exports = {
   mode: isDevelopment ? 'development' : 'production',
   devtool: 'eval-cheap-module-source-map',
   output: {
-    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+    libraryTarget: 'umd',
+    library: 'MyLib',
+    umdNamedDefine: true
   },
   module: {
     rules: [
@@ -22,22 +25,12 @@ module.exports = {
             loader: 'css-loader', // translates CSS into CommonJS modules
           },
           {
-            loader: 'postcss-loader', // Run postcss actions
-            options: {
-              postcssOptions: {
-                plugins() {
-                  'autoprefixer';
-                },
-              },
-            },
-          },
-          {
             loader: 'sass-loader', // compiles Sass to CSS
           },
         ],
       },
       {
-        test: /\.jsx?/,
+        test: /\.js(x)?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -88,7 +81,6 @@ module.exports = {
     ],
   },
   resolve: {
-    // Enable importing JS / JSX files without specifying their extension
     modules: [path.resolve(__dirname, 'node_modules')],
     extensions: [
       '.js',
@@ -102,7 +94,6 @@ module.exports = {
     ],
   },
   devServer: {
-    // contentBase: path.resolve(__dirname, '/tsCompiled/frontend'),
     contentBase: path.resolve(__dirname, '/dist/'),
     host: 'localhost',
     port: '8080',
