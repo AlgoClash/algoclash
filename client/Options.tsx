@@ -25,8 +25,8 @@ const Options = memo<Props>(({score, round, game, setGameState, totalRounds, eva
         <div id='options'>
             <>
                 <div id='countdown'>
-                    {timer} sec
-                </div>
+                    {timer}
+                </div>    
                 <div id='gamestate'>{gameState[game]}</div>
             </>
 

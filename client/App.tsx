@@ -24,7 +24,7 @@ enum gameState {
 }
 
 const App = () => {
-
+    const startTime = 3;
     const [id, setID] = useState<string>('');
     const [challengerid, setChallengerID] = useState<string>('Waiting for partner...');
     const socket = useRef<Socket>();
@@ -51,7 +51,7 @@ const App = () => {
     const [modalContent, setModalContent] = useState<any>(null);
 
     const [theme, setTheme] = useState<string>('');
-    const [timer, setTimer] = useState<number>(3);
+    const [timer, setTimer] = useState<number>(startTime);
 
     // compAlgos array holds completed algo names - need to invoke addAlgo(...compAlgos, curAlgo) on successful algo completion
     const [compAlgos, setCompAlgos] = useState<string[]>([]);
@@ -203,10 +203,11 @@ const App = () => {
     }, [game]);
 
     useEffect(() => {
+        if (game!= 2) return;
 
         if (timer === 0) {
             round < totalRounds ? setGameState(gameState.review) : setGameState(gameState.end);
-
+            setTimer(startTime)
         } else {
             let newTime = timer - 1;
             setTimeout(() => setTimer(newTime), 1000);
